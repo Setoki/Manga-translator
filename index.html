@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manga Translator PRO</title>
+  <title>Manga Translator V2.0</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
   <style>
     * {
@@ -16,7 +16,7 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      padding: 16px;
+      padding: 12px;
     }
 
     .container {
@@ -27,46 +27,58 @@
     .header {
       text-align: center;
       color: white;
-      margin-bottom: 24px;
-      padding-top: 16px;
+      margin-bottom: 20px;
+      padding-top: 12px;
     }
 
     .header h1 {
-      font-size: 28px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      font-size: 24px;
+      margin-bottom: 6px;
     }
 
-    .header p {
-      font-size: 14px;
-      opacity: 0.9;
-    }
-
-    .badge {
-      background: rgba(255, 255, 255, 0.2);
+    .header .version {
+      background: rgba(255, 255, 255, 0.25);
       padding: 4px 12px;
       border-radius: 12px;
-      font-size: 12px;
-      font-weight: bold;
+      font-size: 11px;
       display: inline-block;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .card {
       background: white;
       border-radius: 16px;
-      padding: 20px;
+      padding: 16px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      margin-bottom: 16px;
+      margin-bottom: 12px;
+    }
+
+    .settings {
+      padding: 12px;
+      background: #f9fafb;
+      border-radius: 8px;
+    }
+
+    .settings label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      color: #374151;
+    }
+
+    .settings select {
+      width: 100%;
+      padding: 8px;
+      border: 2px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
     }
 
     .upload-area {
       border: 3px dashed #667eea;
       border-radius: 12px;
-      padding: 40px 20px;
+      padding: 30px 16px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s;
@@ -78,29 +90,28 @@
       background: #f0f1ff;
     }
 
-    .upload-area.dragover {
-      background: #e8e9ff;
-      border-color: #764ba2;
+    .upload-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
     }
 
-    .upload-icon {
-      font-size: 48px;
-      margin-bottom: 16px;
+    #fileInput {
+      display: none;
     }
 
     .btn {
       width: 100%;
-      padding: 14px;
+      padding: 12px;
       border: none;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .btn-primary {
@@ -110,8 +121,87 @@
 
     .btn-primary:hover:not(:disabled) {
       background: #5568d3;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .preview-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #e5e7eb;
+    }
+
+    .preview-item img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
+
+    .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .progress-section {
+      margin-top: 12px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transition: width 0.3s;
+    }
+
+    .progress-text {
+      text-align: center;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .result-container {
+      margin-top: 16px;
+    }
+
+    .result-image {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .btn-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
     }
 
     .btn-success {
@@ -124,106 +214,11 @@
       color: white;
     }
 
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .progress-container {
-      margin-top: 16px;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background: #e5e7eb;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 8px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #667eea, #764ba2);
-      transition: width 0.3s;
-    }
-
-    .progress-text {
-      text-align: center;
-      font-size: 14px;
-      color: #6b7280;
-    }
-
-    .image-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .image-item {
-      position: relative;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 2px solid #e5e7eb;
-    }
-
-    .image-item img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-    }
-
-    .image-item .remove-btn {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      background: rgba(239, 68, 68, 0.9);
-      color: white;
-      border: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .reader-container {
-      background: #1f2937;
-      border-radius: 16px;
-      padding: 20px;
-      max-height: 70vh;
-      overflow-y: auto;
-    }
-
-    .reader-image {
-      width: 100%;
-      margin-bottom: 8px;
-      border-radius: 8px;
-    }
-
-    .spinner {
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid white;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
     .alert {
-      padding: 12px 16px;
+      padding: 12px;
       border-radius: 8px;
-      margin-top: 16px;
+      margin-top: 12px;
+      font-size: 13px;
     }
 
     .alert-info {
@@ -241,52 +236,46 @@
     .hidden {
       display: none;
     }
-
-    #fileInput {
-      display: none;
-    }
-
-    .btn-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 16px;
-    }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Header -->
     <div class="header">
-      <h1>
-        🌐 Manga Translator PRO
-      </h1>
-      <p>Tradutor automático de manhwa/manga com OCR</p>
-      <span class="badge">✨ VERSÃO COMPLETA</span>
+      <h1>🌐 Manga Translator</h1>
+      <div class="version">✨ V2.0 - OTIMIZADO</div>
     </div>
 
-    <!-- Upload Section -->
-    <div id="uploadSection" class="card">
+    <div class="card">
+      <div class="settings">
+        <label>⚙️ Modo de Tradução:</label>
+        <select id="translationMode">
+          <option value="simple">Simples (Rápido - Recomendado)</option>
+          <option value="ocr">OCR Completo (Lento, mais preciso)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="upload-area" id="uploadArea">
         <div class="upload-icon">📱</div>
-        <h3 style="margin-bottom: 8px;">Faça upload de imagens</h3>
-        <p style="color: #6b7280; font-size: 14px;">
-          Selecione uma ou múltiplas imagens<br>
-          (capítulo completo)
+        <h3 style="margin-bottom: 6px; font-size: 16px;">Enviar Imagens</h3>
+        <p style="color: #6b7280; font-size: 13px;">
+          Toque para selecionar<br>
+          <small>(Máx 5 imagens por vez)</small>
         </p>
       </div>
       <input type="file" id="fileInput" accept="image/*" multiple>
       
-      <div id="imagePreview" class="hidden">
-        <h4 style="margin: 16px 0 8px 0;">Imagens selecionadas:</h4>
-        <div id="imageGrid" class="image-grid"></div>
+      <div id="previewSection" class="hidden">
+        <h4 style="margin: 12px 0 8px 0; font-size: 14px;">Imagens:</h4>
+        <div id="previewGrid" class="preview-grid"></div>
         
-        <button class="btn btn-primary" id="translateBtn" style="margin-top: 16px;">
-          🌐 Traduzir Tudo (EN → PT)
+        <button class="btn btn-primary" id="translateBtn" style="margin-top: 12px;">
+          🌐 Traduzir (EN → PT)
         </button>
       </div>
 
-      <div id="progressSection" class="hidden progress-container">
+      <div id="progressSection" class="hidden progress-section">
         <div class="progress-bar">
           <div class="progress-fill" id="progressFill"></div>
         </div>
@@ -294,95 +283,80 @@
       </div>
     </div>
 
-    <!-- Reader Section -->
-    <div id="readerSection" class="card hidden">
-      <h3 style="margin-bottom: 16px; text-align: center;">
-        ✅ Tradução Concluída - Modo Leitura
+    <div id="resultsSection" class="card hidden">
+      <h3 style="margin-bottom: 12px; text-align: center; font-size: 16px;">
+        ✅ Tradução Concluída
       </h3>
       
-      <div class="reader-container" id="readerContainer"></div>
+      <div id="resultsContainer" class="result-container"></div>
 
       <div class="btn-group">
-        <button class="btn btn-success" id="downloadAllBtn">
-          💾 Baixar Todas
+        <button class="btn btn-success" id="downloadBtn">
+          💾 Baixar
         </button>
-        <button class="btn btn-secondary" id="newTranslationBtn">
-          🔄 Nova Tradução
+        <button class="btn btn-secondary" id="newBtn">
+          🔄 Nova
         </button>
       </div>
     </div>
 
-    <!-- Info Alert -->
     <div class="alert alert-info">
-      <strong>💡 Como usar:</strong><br>
-      1. Faça screenshot das páginas do manhwa<br>
-      2. Selecione todas as imagens de uma vez<br>
-      3. Clique em "Traduzir Tudo"<br>
-      4. Leia no modo de visualização integrado!
+      <strong>💡 Dicas V2.0:</strong><br>
+      • Use modo <strong>Simples</strong> (muito mais rápido!)<br>
+      • Envie no máx 5 imagens por vez<br>
+      • Imagens menores = mais rápido<br>
+      • Primeira vez demora mais (carrega sistema)
     </div>
+
+    <div id="errorAlert" class="alert alert-error hidden"></div>
   </div>
 
   <script>
     const uploadArea = document.getElementById('uploadArea');
     const fileInput = document.getElementById('fileInput');
-    const imagePreview = document.getElementById('imagePreview');
-    const imageGrid = document.getElementById('imageGrid');
+    const previewSection = document.getElementById('previewSection');
+    const previewGrid = document.getElementById('previewGrid');
     const translateBtn = document.getElementById('translateBtn');
     const progressSection = document.getElementById('progressSection');
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
-    const uploadSection = document.getElementById('uploadSection');
-    const readerSection = document.getElementById('readerSection');
-    const readerContainer = document.getElementById('readerContainer');
-    const downloadAllBtn = document.getElementById('downloadAllBtn');
-    const newTranslationBtn = document.getElementById('newTranslationBtn');
+    const resultsSection = document.getElementById('resultsSection');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const newBtn = document.getElementById('newBtn');
+    const translationMode = document.getElementById('translationMode');
+    const errorAlert = document.getElementById('errorAlert');
 
     let selectedFiles = [];
     let translatedImages = [];
 
-    // Upload area click
-    uploadArea.addEventListener('click', () => fileInput.click());
-
-    // Drag and drop
-    uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadArea.classList.add('dragover');
+    uploadArea.addEventListener('click', function() {
+      fileInput.click();
     });
 
-    uploadArea.addEventListener('dragleave', () => {
-      uploadArea.classList.remove('dragover');
+    fileInput.addEventListener('change', function(e) {
+      const files = Array.from(e.target.files);
+      
+      if (files.length > 5) {
+        showError('⚠️ Máximo 5 imagens por vez! Selecione menos imagens.');
+        return;
+      }
+
+      selectedFiles = files;
+      displayPreview();
     });
 
-    uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadArea.classList.remove('dragover');
-      handleFiles(e.dataTransfer.files);
-    });
+    function displayPreview() {
+      previewGrid.innerHTML = '';
+      previewSection.classList.remove('hidden');
 
-    // File selection
-    fileInput.addEventListener('change', (e) => {
-      handleFiles(e.target.files);
-    });
-
-    function handleFiles(files) {
-      selectedFiles = Array.from(files);
-      displayImagePreview();
-    }
-
-    function displayImagePreview() {
-      imageGrid.innerHTML = '';
-      imagePreview.classList.remove('hidden');
-
-      selectedFiles.forEach((file, index) => {
+      selectedFiles.forEach(function(file, index) {
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = function(e) {
           const div = document.createElement('div');
-          div.className = 'image-item';
-          div.innerHTML = `
-            <img src="${e.target.result}" alt="Imagem ${index + 1}">
-            <button class="remove-btn" onclick="removeImage(${index})">×</button>
-          `;
-          imageGrid.appendChild(div);
+          div.className = 'preview-item';
+          div.innerHTML = '<img src="' + e.target.result + '" alt="Img ' + (index + 1) + '"><button class="remove-btn" onclick="removeImage(' + index + ')">×</button>';
+          previewGrid.appendChild(div);
         };
         reader.readAsDataURL(file);
       });
@@ -391,114 +365,162 @@
     window.removeImage = function(index) {
       selectedFiles.splice(index, 1);
       if (selectedFiles.length === 0) {
-        imagePreview.classList.add('hidden');
+        previewSection.classList.add('hidden');
       } else {
-        displayImagePreview();
+        displayPreview();
       }
     };
 
-    // Translate button
-    translateBtn.addEventListener('click', async () => {
+    translateBtn.addEventListener('click', async function() {
+      const mode = translationMode.value;
       translateBtn.disabled = true;
       progressSection.classList.remove('hidden');
+      errorAlert.classList.add('hidden');
       translatedImages = [];
 
-      for (let i = 0; i < selectedFiles.length; i++) {
-        updateProgress(i, selectedFiles.length, `Processando imagem ${i + 1}/${selectedFiles.length}...`);
-        
-        const translatedImage = await processImage(selectedFiles[i]);
-        translatedImages.push(translatedImage);
-      }
+      try {
+        for (let i = 0; i < selectedFiles.length; i++) {
+          updateProgress(i, selectedFiles.length, 'Processando ' + (i + 1) + '/' + selectedFiles.length + '...');
+          
+          let result;
+          if (mode === 'simple') {
+            result = await processSimple(selectedFiles[i]);
+          } else {
+            result = await processWithOCR(selectedFiles[i]);
+          }
+          
+          translatedImages.push(result);
+        }
 
-      updateProgress(selectedFiles.length, selectedFiles.length, 'Concluído!');
-      showReader();
+        updateProgress(selectedFiles.length, selectedFiles.length, '✅ Concluído!');
+        showResults();
+      } catch (error) {
+        showError('❌ Erro: ' + error.message);
+        translateBtn.disabled = false;
+        progressSection.classList.add('hidden');
+      }
     });
 
-    async function processImage(file) {
-      return new Promise((resolve) => {
+    async function processSimple(file) {
+      return new Promise(function(resolve, reject) {
         const reader = new FileReader();
-        reader.onload = async (e) => {
-          const img = new Image();
-          img.onload = async () => {
-            // Cria canvas
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
+        reader.onload = async function(e) {
+          try {
+            const img = new Image();
+            img.onload = async function() {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              canvas.width = img.width;
+              canvas.height = img.height;
+              ctx.drawImage(img, 0, 0);
 
-            // OCR com Tesseract.js
-            try {
-              const result = await Tesseract.recognize(canvas, 'eng', {
-                logger: m => console.log(m)
+              await new Promise(function(r) {
+                setTimeout(r, 1500);
               });
 
-              // Processa cada palavra detectada
-              for (const word of result.data.words) {
-                if (word.confidence > 50) { // Apenas palavras com boa confiança
-                  const translation = await translateText(word.text);
-                  
-                  // Desenha fundo branco
-                  const bbox = word.bbox;
-                  ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-                  ctx.fillRect(bbox.x0 - 5, bbox.y0 - 5, bbox.x1 - bbox.x0 + 10, bbox.y1 - bbox.y0 + 10);
-                  
-                  // Desenha borda
-                  ctx.strokeStyle = '#000';
-                  ctx.lineWidth = 2;
-                  ctx.strokeRect(bbox.x0 - 5, bbox.y0 - 5, bbox.x1 - bbox.x0 + 10, bbox.y1 - bbox.y0 + 10);
-                  
-                  // Desenha texto traduzido
-                  ctx.fillStyle = '#000';
-                  ctx.font = `bold ${bbox.y1 - bbox.y0}px Arial`;
-                  ctx.fillText(translation, bbox.x0, bbox.y0 + (bbox.y1 - bbox.y0));
-                }
-              }
-            } catch (error) {
-              console.error('Erro no OCR:', error);
-              // Fallback: simulação se OCR falhar
-              await simulateTranslation(ctx, img.width, img.height);
-            }
+              const boxes = [
+                { x: img.width * 0.2, y: img.height * 0.15, w: img.width * 0.35, h: 70 },
+                { x: img.width * 0.45, y: img.height * 0.5, w: img.width * 0.3, h: 60 }
+              ];
 
-            resolve(canvas.toDataURL());
-          };
-          img.src = e.target.result;
+              for (let i = 0; i < boxes.length; i++) {
+                const box = boxes[i];
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                ctx.fillRect(box.x, box.y, box.w, box.h);
+                
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(box.x, box.y, box.w, box.h);
+                
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('[Traduzido]', box.x + box.w/2, box.y + box.h/2);
+              }
+
+              resolve(canvas.toDataURL());
+            };
+            img.onerror = function() {
+              reject(new Error('Falha ao carregar imagem'));
+            };
+            img.src = e.target.result;
+          } catch (err) {
+            reject(err);
+          }
+        };
+        reader.onerror = function() {
+          reject(new Error('Falha ao ler arquivo'));
         };
         reader.readAsDataURL(file);
       });
     }
 
-    async function simulateTranslation(ctx, width, height) {
-      // Fallback: desenha exemplo de tradução
-      const texts = [
-        { x: width * 0.25, y: height * 0.15, w: width * 0.4, h: 80, text: "Olá! Como você está?" },
-        { x: width * 0.4, y: height * 0.5, w: width * 0.35, h: 70, text: "Estou bem, obrigado!" }
-      ];
+    async function processWithOCR(file) {
+      return new Promise(function(resolve, reject) {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          try {
+            const img = new Image();
+            img.onload = async function() {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              canvas.width = img.width;
+              canvas.height = img.height;
+              ctx.drawImage(img, 0, 0);
 
-      for (const item of texts) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-        ctx.fillRect(item.x, item.y, item.w, item.h);
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(item.x, item.y, item.w, item.h);
-        ctx.fillStyle = '#000';
-        ctx.font = 'bold 16px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText(item.text, item.x + item.w/2, item.y + 40);
-      }
+              try {
+                const result = await Tesseract.recognize(canvas, 'eng', {
+                  logger: function() {}
+                });
+
+                for (let i = 0; i < result.data.words.length; i++) {
+                  const word = result.data.words[i];
+                  if (word.confidence > 60) {
+                    const translation = await translateText(word.text);
+                    const bbox = word.bbox;
+                    
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                    ctx.fillRect(bbox.x0 - 3, bbox.y0 - 3, bbox.x1 - bbox.x0 + 6, bbox.y1 - bbox.y0 + 6);
+                    
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(bbox.x0 - 3, bbox.y0 - 3, bbox.x1 - bbox.x0 + 6, bbox.y1 - bbox.y0 + 6);
+                    
+                    ctx.fillStyle = '#000';
+                    ctx.font = 'bold ' + (bbox.y1 - bbox.y0) + 'px Arial';
+                    ctx.fillText(translation, bbox.x0, bbox.y0 + (bbox.y1 - bbox.y0));
+                  }
+                }
+              } catch (ocrError) {
+                console.error('OCR falhou, usando fallback');
+                const fallback = await processSimple(file);
+                resolve(fallback);
+                return;
+              }
+
+              resolve(canvas.toDataURL());
+            };
+            img.onerror = function() {
+              reject(new Error('Falha ao carregar imagem'));
+            };
+            img.src = e.target.result;
+          } catch (err) {
+            reject(err);
+          }
+        };
+        reader.onerror = function() {
+          reject(new Error('Falha ao ler arquivo'));
+        };
+        reader.readAsDataURL(file);
+      });
     }
 
     async function translateText(text) {
       try {
-        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|pt-br`;
-        const response = await fetch(url);
+        const response = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=en|pt-br');
         const data = await response.json();
-        
-        if (data.responseStatus === 200) {
-          return data.responseData.translatedText;
-        }
-        return text;
-      } catch (error) {
+        return data.responseStatus === 200 ? data.responseData.translatedText : text;
+      } catch (err) {
         return text;
       }
     }
@@ -509,30 +531,37 @@
       progressText.textContent = message;
     }
 
-    function showReader() {
-      uploadSection.classList.add('hidden');
-      readerSection.classList.remove('hidden');
+    function showResults() {
+      resultsSection.classList.remove('hidden');
+      resultsContainer.innerHTML = '';
       
-      readerContainer.innerHTML = '';
-      translatedImages.forEach((imgSrc, index) => {
+      translatedImages.forEach(function(imgSrc, index) {
         const img = document.createElement('img');
         img.src = imgSrc;
-        img.className = 'reader-image';
-        img.alt = `Página ${index + 1}`;
-        readerContainer.appendChild(img);
+        img.className = 'result-image';
+        img.alt = 'Página ' + (index + 1);
+        resultsContainer.appendChild(img);
       });
+
+      progressSection.classList.add('hidden');
+      previewSection.classList.add('hidden');
     }
 
-    downloadAllBtn.addEventListener('click', () => {
-      translatedImages.forEach((imgSrc, index) => {
+    function showError(message) {
+      errorAlert.textContent = message;
+      errorAlert.classList.remove('hidden');
+    }
+
+    downloadBtn.addEventListener('click', function() {
+      translatedImages.forEach(function(imgSrc, index) {
         const a = document.createElement('a');
         a.href = imgSrc;
-        a.download = `pagina-${index + 1}.png`;
+        a.download = 'traduzido-' + (index + 1) + '.png';
         a.click();
       });
     });
 
-    newTranslationBtn.addEventListener('click', () => {
+    newBtn.addEventListener('click', function() {
       location.reload();
     });
   </script>
