@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manga Translator V2.0</title>
+  <title>Tradutor de Mangá V2.0</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
   <style>
     * {
@@ -241,37 +241,37 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>🌐 Manga Translator</h1>
-      <div class="version">✨ V2.0 - OTIMIZADO</div>
+      <h1>🌐 Tradutor de Mangá</h1>
+      <div class="version">✨ V2.0 - Otimizado</div>
     </div>
 
     <div class="card">
       <div class="settings">
-        <label>⚙️ Modo de Tradução:</label>
+        <label>⚙️ Modo de Tradução</label>
         <select id="translationMode">
-          <option value="simple">Simples (Rápido - Recomendado)</option>
-          <option value="ocr">OCR Completo (Lento, mais preciso)</option>
+          <option value="simple">Rápido (Recomendado)</option>
+          <option value="ocr">Preciso (Mais lento)</option>
         </select>
       </div>
     </div>
 
     <div class="card">
       <div class="upload-area" id="uploadArea">
-        <div class="upload-icon">📱</div>
-        <h3 style="margin-bottom: 6px; font-size: 16px;">Enviar Imagens</h3>
+        <div class="upload-icon">📤</div>
+        <h3 style="margin-bottom: 6px; font-size: 16px;">Escolha as Imagens</h3>
         <p style="color: #6b7280; font-size: 13px;">
-          Toque para selecionar<br>
-          <small>(Máx 5 imagens por vez)</small>
+          Clique aqui ou arraste as imagens<br>
+          <small>(Até 5 imagens por vez)</small>
         </p>
       </div>
       <input type="file" id="fileInput" accept="image/*" multiple>
       
       <div id="previewSection" class="hidden">
-        <h4 style="margin: 12px 0 8px 0; font-size: 14px;">Imagens:</h4>
+        <h4 style="margin: 12px 0 8px 0; font-size: 14px;">Imagens Selecionadas:</h4>
         <div id="previewGrid" class="preview-grid"></div>
         
         <button class="btn btn-primary" id="translateBtn" style="margin-top: 12px;">
-          🌐 Traduzir (EN → PT)
+          🌐 Traduzir Agora (EN → PT)
         </button>
       </div>
 
@@ -279,33 +279,33 @@
         <div class="progress-bar">
           <div class="progress-fill" id="progressFill"></div>
         </div>
-        <div class="progress-text" id="progressText">Processando...</div>
+        <div class="progress-text" id="progressText">Processando suas imagens...</div>
       </div>
     </div>
 
     <div id="resultsSection" class="card hidden">
       <h3 style="margin-bottom: 12px; text-align: center; font-size: 16px;">
-        ✅ Tradução Concluída
+        ✅ Tradução Concluída!
       </h3>
       
       <div id="resultsContainer" class="result-container"></div>
 
       <div class="btn-group">
         <button class="btn btn-success" id="downloadBtn">
-          💾 Baixar
+          💾 Baixar Todas
         </button>
         <button class="btn btn-secondary" id="newBtn">
-          🔄 Nova
+          🔄 Traduzir Outras
         </button>
       </div>
     </div>
 
     <div class="alert alert-info">
-      <strong>💡 Dicas V2.0:</strong><br>
-      • Use modo <strong>Simples</strong> (muito mais rápido!)<br>
-      • Envie no máx 5 imagens por vez<br>
-      • Imagens menores = mais rápido<br>
-      • Primeira vez demora mais (carrega sistema)
+      <strong>💡 Dicas para Melhor Resultado:</strong><br>
+      • O modo <strong>Rápido</strong> é mais ágil e funciona bem na maioria dos casos<br>
+      • Envie no máximo 5 imagens de cada vez para melhor performance<br>
+      • Imagens menores processam mais rápido<br>
+      • A primeira tradução pode demorar um pouco (carregando sistema)
     </div>
 
     <div id="errorAlert" class="alert alert-error hidden"></div>
@@ -338,7 +338,7 @@
       const files = Array.from(e.target.files);
       
       if (files.length > 5) {
-        showError('⚠️ Máximo 5 imagens por vez! Selecione menos imagens.');
+        showError('⚠️ Você selecionou muitas imagens! Por favor, escolha no máximo 5 imagens por vez.');
         return;
       }
 
@@ -355,7 +355,7 @@
         reader.onload = function(e) {
           const div = document.createElement('div');
           div.className = 'preview-item';
-          div.innerHTML = '<img src="' + e.target.result + '" alt="Img ' + (index + 1) + '"><button class="remove-btn" onclick="removeImage(' + index + ')">×</button>';
+          div.innerHTML = '<img src="' + e.target.result + '" alt="Imagem ' + (index + 1) + '"><button class="remove-btn" onclick="removeImage(' + index + ')">×</button>';
           previewGrid.appendChild(div);
         };
         reader.readAsDataURL(file);
@@ -380,7 +380,7 @@
 
       try {
         for (let i = 0; i < selectedFiles.length; i++) {
-          updateProgress(i, selectedFiles.length, 'Processando ' + (i + 1) + '/' + selectedFiles.length + '...');
+          updateProgress(i, selectedFiles.length, 'Traduzindo imagem ' + (i + 1) + ' de ' + selectedFiles.length + '...');
           
           let result;
           if (mode === 'simple') {
@@ -392,10 +392,10 @@
           translatedImages.push(result);
         }
 
-        updateProgress(selectedFiles.length, selectedFiles.length, '✅ Concluído!');
+        updateProgress(selectedFiles.length, selectedFiles.length, '✅ Tudo pronto!');
         showResults();
       } catch (error) {
-        showError('❌ Erro: ' + error.message);
+        showError('❌ Ops! Algo deu errado: ' + error.message);
         translateBtn.disabled = false;
         progressSection.classList.add('hidden');
       }
@@ -435,13 +435,13 @@
                 ctx.fillStyle = '#000';
                 ctx.font = 'bold 14px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText('[Traduzido]', box.x + box.w/2, box.y + box.h/2);
+                ctx.fillText('[Texto Traduzido]', box.x + box.w/2, box.y + box.h/2);
               }
 
               resolve(canvas.toDataURL());
             };
             img.onerror = function() {
-              reject(new Error('Falha ao carregar imagem'));
+              reject(new Error('Não foi possível carregar a imagem'));
             };
             img.src = e.target.result;
           } catch (err) {
@@ -449,7 +449,7 @@
           }
         };
         reader.onerror = function() {
-          reject(new Error('Falha ao ler arquivo'));
+          reject(new Error('Erro ao ler o arquivo'));
         };
         reader.readAsDataURL(file);
       });
@@ -492,7 +492,7 @@
                   }
                 }
               } catch (ocrError) {
-                console.error('OCR falhou, usando fallback');
+                console.error('OCR falhou, usando modo rápido');
                 const fallback = await processSimple(file);
                 resolve(fallback);
                 return;
@@ -501,7 +501,7 @@
               resolve(canvas.toDataURL());
             };
             img.onerror = function() {
-              reject(new Error('Falha ao carregar imagem'));
+              reject(new Error('Não foi possível carregar a imagem'));
             };
             img.src = e.target.result;
           } catch (err) {
@@ -509,7 +509,7 @@
           }
         };
         reader.onerror = function() {
-          reject(new Error('Falha ao ler arquivo'));
+          reject(new Error('Erro ao ler o arquivo'));
         };
         reader.readAsDataURL(file);
       });
@@ -539,7 +539,7 @@
         const img = document.createElement('img');
         img.src = imgSrc;
         img.className = 'result-image';
-        img.alt = 'Página ' + (index + 1);
+        img.alt = 'Página ' + (index + 1) + ' traduzida';
         resultsContainer.appendChild(img);
       });
 
@@ -556,7 +556,7 @@
       translatedImages.forEach(function(imgSrc, index) {
         const a = document.createElement('a');
         a.href = imgSrc;
-        a.download = 'traduzido-' + (index + 1) + '.png';
+        a.download = 'manga-traduzido-' + (index + 1) + '.png';
         a.click();
       });
     });
