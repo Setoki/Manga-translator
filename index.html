@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tradutor de Mangá V3.0</title>
+  <title>Tradutor de Mangá PRO V3.0</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
   <style>
     * {
@@ -32,69 +32,88 @@
     }
 
     .header h1 {
-      font-size: 24px;
-      margin-bottom: 6px;
+      font-size: 28px;
+      margin-bottom: 8px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
     .header .version {
-      background: rgba(255, 255, 255, 0.25);
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 11px;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
       display: inline-block;
-      margin-top: 6px;
+      margin-top: 8px;
+      font-weight: bold;
     }
 
     .card {
       background: white;
       border-radius: 16px;
-      padding: 16px;
+      padding: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      margin-bottom: 16px;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
       margin-bottom: 12px;
+    }
+
+    .settings-full {
+      grid-column: 1 / -1;
     }
 
     .settings {
       padding: 12px;
       background: #f9fafb;
       border-radius: 8px;
-      margin-bottom: 12px;
     }
 
     .settings label {
       display: block;
       font-size: 13px;
       font-weight: bold;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       color: #374151;
     }
 
     .settings select {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       border: 2px solid #d1d5db;
       border-radius: 6px;
       font-size: 14px;
-      margin-bottom: 8px;
+      background: white;
+      cursor: pointer;
+    }
+
+    .settings select:focus {
+      outline: none;
+      border-color: #667eea;
     }
 
     .upload-area {
       border: 3px dashed #667eea;
       border-radius: 12px;
-      padding: 30px 16px;
+      padding: 40px 20px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s;
-      background: #f8f9ff;
+      background: linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 100%);
     }
 
     .upload-area:hover {
       border-color: #764ba2;
-      background: #f0f1ff;
+      background: linear-gradient(135deg, #f0f1ff 0%, #e8e9ff 100%);
+      transform: scale(1.02);
     }
 
     .upload-icon {
-      font-size: 40px;
-      margin-bottom: 12px;
+      font-size: 48px;
+      margin-bottom: 16px;
     }
 
     #fileInput {
@@ -103,78 +122,93 @@
 
     .btn {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       border: none;
       border-radius: 8px;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     .btn-primary {
-      background: #667eea;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
     }
 
     .btn-primary:hover:not(:disabled) {
-      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
     }
 
     .btn:disabled {
-      opacity: 0.5;
+      opacity: 0.6;
       cursor: not-allowed;
+      transform: none !important;
     }
 
     .preview-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 10px;
-      margin-top: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
     }
 
     .preview-item {
       position: relative;
-      border-radius: 8px;
+      border-radius: 10px;
       overflow: hidden;
-      border: 2px solid #e5e7eb;
+      border: 3px solid #e5e7eb;
+      transition: all 0.3s;
+    }
+
+    .preview-item:hover {
+      border-color: #667eea;
+      transform: scale(1.05);
     }
 
     .preview-item img {
       width: 100%;
-      height: 120px;
+      height: 140px;
       object-fit: cover;
     }
 
     .remove-btn {
       position: absolute;
-      top: 4px;
-      right: 4px;
-      background: rgba(239, 68, 68, 0.9);
+      top: 6px;
+      right: 6px;
+      background: rgba(239, 68, 68, 0.95);
       color: white;
       border: none;
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+
+    .remove-btn:hover {
+      background: rgb(220, 38, 38);
+      transform: scale(1.1);
     }
 
     .progress-section {
-      margin-top: 12px;
+      margin-top: 16px;
     }
 
     .progress-bar {
       width: 100%;
-      height: 6px;
+      height: 8px;
       background: #e5e7eb;
-      border-radius: 3px;
+      border-radius: 4px;
       overflow: hidden;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .progress-fill {
@@ -185,60 +219,73 @@
 
     .progress-text {
       text-align: center;
-      font-size: 13px;
+      font-size: 14px;
       color: #6b7280;
+      font-weight: 500;
     }
 
     .result-container {
-      margin-top: 16px;
+      margin-top: 20px;
     }
 
     .result-image {
       width: 100%;
-      border-radius: 8px;
-      margin-bottom: 8px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      border: 2px solid #e5e7eb;
     }
 
     .btn-group {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 12px;
+      gap: 10px;
+      margin-top: 16px;
     }
 
     .btn-success {
-      background: #10b981;
+      background: linear-gradient(135deg, #10b981, #059669);
       color: white;
+    }
+
+    .btn-success:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
     }
 
     .btn-secondary {
-      background: #6b7280;
+      background: linear-gradient(135deg, #6b7280, #4b5563);
       color: white;
     }
 
+    .btn-secondary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
+    }
+
     .alert {
-      padding: 12px;
-      border-radius: 8px;
-      margin-top: 12px;
+      padding: 14px;
+      border-radius: 10px;
+      margin-top: 16px;
       font-size: 13px;
+      line-height: 1.6;
     }
 
     .alert-info {
-      background: #dbeafe;
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
       color: #1e40af;
-      border: 1px solid #93c5fd;
+      border: 2px solid #93c5fd;
     }
 
     .alert-success {
-      background: #d1fae5;
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
       color: #065f46;
-      border: 1px solid #6ee7b7;
+      border: 2px solid #6ee7b7;
     }
 
     .alert-error {
-      background: #fee2e2;
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
       color: #991b1b;
-      border: 1px solid #fca5a5;
+      border: 2px solid #fca5a5;
     }
 
     .hidden {
@@ -247,64 +294,99 @@
 
     .feature-badge {
       display: inline-block;
-      background: #10b981;
+      background: linear-gradient(135deg, #10b981, #059669);
       color: white;
-      padding: 2px 8px;
+      padding: 3px 10px;
       border-radius: 12px;
       font-size: 10px;
       margin-left: 6px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .stat-box {
+      text-align: center;
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+      border: 2px solid #e5e7eb;
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 4px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>🌐 Tradutor de Mangá</h1>
-      <div class="version">✨ V3.0 - Sistema Inteligente</div>
+      <h1>🌐 Tradutor de Mangá PRO</h1>
+      <div class="version">⚡ V3.0 - SISTEMA INTELIGENTE</div>
     </div>
 
     <div class="card">
-      <div class="settings">
-        <label>🗣️ Idioma de Origem</label>
-        <select id="sourceLang">
-          <option value="eng">🇺🇸 Inglês</option>
-          <option value="jpn">🇯🇵 Japonês</option>
-          <option value="kor">🇰🇷 Coreano</option>
-          <option value="spa">🇪🇸 Espanhol</option>
-        </select>
+      <div class="settings-grid">
+        <div class="settings">
+          <label>🗣️ Idioma de Origem</label>
+          <select id="sourceLang">
+            <option value="eng">🇺🇸 Inglês</option>
+            <option value="jpn">🇯🇵 Japonês</option>
+            <option value="kor">🇰🇷 Coreano</option>
+            <option value="spa">🇪🇸 Espanhol</option>
+          </select>
+        </div>
 
-        <label>🎯 Idioma de Destino</label>
-        <select id="targetLang">
-          <option value="pt">🇧🇷 Português (BR)</option>
-          <option value="en">🇺🇸 Inglês</option>
-          <option value="es">🇪🇸 Espanhol</option>
-        </select>
+        <div class="settings">
+          <label>🎯 Idioma de Destino</label>
+          <select id="targetLang">
+            <option value="pt">🇧🇷 Português BR</option>
+            <option value="en">🇺🇸 Inglês</option>
+            <option value="es">🇪🇸 Espanhol</option>
+          </select>
+        </div>
 
-        <label>⚙️ Modo de Processamento <span class="feature-badge">NOVO</span></label>
-        <select id="detectionMode">
-          <option value="smart">🧠 Inteligente (Detecta balões automaticamente)</option>
-          <option value="ocr-only">📝 OCR Avançado (Detecta todo texto)</option>
-        </select>
+        <div class="settings settings-full">
+          <label>⚙️ Modo de Processamento <span class="feature-badge">NOVO!</span></label>
+          <select id="detectionMode">
+            <option value="smart">🧠 Inteligente (Detecta balões automaticamente)</option>
+            <option value="ocr-only">📝 OCR Avançado (Detecta todo texto)</option>
+          </select>
+        </div>
       </div>
     </div>
 
     <div class="card">
       <div class="upload-area" id="uploadArea">
         <div class="upload-icon">📤</div>
-        <h3 style="margin-bottom: 6px; font-size: 16px;">Escolha as Imagens</h3>
-        <p style="color: #6b7280; font-size: 13px;">
+        <h3 style="margin-bottom: 8px; font-size: 18px; color: #374151;">Escolha as Imagens do Mangá</h3>
+        <p style="color: #6b7280; font-size: 14px;">
           Clique aqui ou arraste as imagens<br>
-          <small>(Até 3 imagens por vez para melhor qualidade)</small>
+          <small style="font-size: 12px;">(Até 3 imagens por vez para melhor qualidade)</small>
         </p>
       </div>
       <input type="file" id="fileInput" accept="image/*" multiple>
       
       <div id="previewSection" class="hidden">
-        <h4 style="margin: 12px 0 8px 0; font-size: 14px;">Imagens Selecionadas:</h4>
+        <h4 style="margin: 16px 0 12px 0; font-size: 15px; color: #374151;">📸 Imagens Selecionadas:</h4>
         <div id="previewGrid" class="preview-grid"></div>
         
-        <button class="btn btn-primary" id="translateBtn" style="margin-top: 12px;">
-          🌐 Iniciar Tradução Inteligente
+        <button class="btn btn-primary" id="translateBtn" style="margin-top: 16px;">
+          🚀 INICIAR TRADUÇÃO INTELIGENTE
         </button>
       </div>
 
@@ -317,11 +399,26 @@
     </div>
 
     <div id="resultsSection" class="card hidden">
-      <h3 style="margin-bottom: 12px; text-align: center; font-size: 16px;">
-        ✅ Tradução Concluída!
+      <h3 style="margin-bottom: 16px; text-align: center; font-size: 18px; color: #10b981;">
+        ✅ Tradução Concluída com Sucesso!
       </h3>
       
-      <div id="statsInfo" class="alert alert-success" style="margin-bottom: 12px;"></div>
+      <div id="statsInfo" class="alert alert-success">
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-number" id="statBubbles">0</div>
+            <div class="stat-label">Balões Detectados</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" id="statTexts">0</div>
+            <div class="stat-label">Textos Traduzidos</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" id="statImages">0</div>
+            <div class="stat-label">Imagens Processadas</div>
+          </div>
+        </div>
+      </div>
       
       <div id="resultsContainer" class="result-container"></div>
 
@@ -330,17 +427,17 @@
           💾 Baixar Todas
         </button>
         <button class="btn btn-secondary" id="newBtn">
-          🔄 Traduzir Outras
+          🔄 Nova Tradução
         </button>
       </div>
     </div>
 
     <div class="alert alert-info">
-      <strong>💡 Melhorias da V3.0:</strong><br>
-      ✨ <strong>Detecção Inteligente:</strong> Identifica balões automaticamente<br>
+      <strong>💡 MELHORIAS DA V3.0:</strong><br>
+      ✨ <strong>Detecção Inteligente:</strong> Identifica balões automaticamente usando análise de pixels<br>
       🎨 <strong>Substituição Natural:</strong> Limpa e redesenha texto profissionalmente<br>
-      🌐 <strong>Tradução Robusta:</strong> Múltiplas APIs com fallback automático<br>
-      🇯🇵 <strong>Multi-idioma:</strong> Suporte a Japonês, Coreano e mais
+      🌐 <strong>Tradução Robusta:</strong> Múltiplas APIs com fallback automático (MyMemory + LibreTranslate + Lingva)<br>
+      🇯🇵 <strong>Multi-idioma:</strong> Suporte completo a Japonês, Coreano, Inglês e Espanhol
     </div>
 
     <div id="errorAlert" class="alert alert-error hidden"></div>
@@ -358,6 +455,9 @@
     const resultsSection = document.getElementById('resultsSection');
     const resultsContainer = document.getElementById('resultsContainer');
     const statsInfo = document.getElementById('statsInfo');
+    const statBubbles = document.getElementById('statBubbles');
+    const statTexts = document.getElementById('statTexts');
+    const statImages = document.getElementById('statImages');
     const downloadBtn = document.getElementById('downloadBtn');
     const newBtn = document.getElementById('newBtn');
     const sourceLang = document.getElementById('sourceLang');
@@ -372,17 +472,39 @@
 
     uploadArea.addEventListener('click', () => fileInput.click());
 
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = '#764ba2';
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.style.borderColor = '#667eea';
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = '#667eea';
+      const files = Array.from(e.dataTransfer.files);
+      handleFiles(files);
+    });
+
     fileInput.addEventListener('change', (e) => {
       const files = Array.from(e.target.files);
-      
+      handleFiles(files);
+    });
+
+    function handleFiles(files) {
       if (files.length > 3) {
         showError('⚠️ Para melhor qualidade, selecione no máximo 3 imagens por vez!');
         return;
       }
 
+      if (files.length === 0) return;
+
       selectedFiles = files;
       displayPreview();
-    });
+      errorAlert.classList.add('hidden');
+    }
 
     function displayPreview() {
       previewGrid.innerHTML = '';
@@ -393,8 +515,10 @@
         reader.onload = (e) => {
           const div = document.createElement('div');
           div.className = 'preview-item';
-          div.innerHTML = `<img src="${e.target.result}" alt="Imagem ${index + 1}">
-                          <button class="remove-btn" onclick="removeImage(${index})">×</button>`;
+          div.innerHTML = `
+            <img src="${e.target.result}" alt="Imagem ${index + 1}">
+            <button class="remove-btn" onclick="removeImage(${index})">×</button>
+          `;
           previewGrid.appendChild(div);
         };
         reader.readAsDataURL(file);
@@ -405,6 +529,7 @@
       selectedFiles.splice(index, 1);
       if (selectedFiles.length === 0) {
         previewSection.classList.add('hidden');
+        fileInput.value = '';
       } else {
         displayPreview();
       }
@@ -414,6 +539,7 @@
       translateBtn.disabled = true;
       progressSection.classList.remove('hidden');
       errorAlert.classList.add('hidden');
+      resultsSection.classList.add('hidden');
       translatedImages = [];
       totalBubblesDetected = 0;
       totalTextsTranslated = 0;
@@ -423,20 +549,21 @@
           updateProgress(i, selectedFiles.length, 
             `🔍 Processando imagem ${i + 1} de ${selectedFiles.length}...`);
           
-          const result = await processImageIntelligent(selectedFiles[i]);
+          const result = await processImageIntelligent(selectedFiles[i], i);
           translatedImages.push(result);
         }
 
-        updateProgress(selectedFiles.length, selectedFiles.length, '✅ Tudo pronto!');
+        updateProgress(selectedFiles.length, selectedFiles.length, '✅ Processamento concluído!');
         showResults();
       } catch (error) {
-        showError('❌ Erro: ' + error.message);
+        console.error('Erro:', error);
+        showError('❌ Erro ao processar: ' + error.message);
         translateBtn.disabled = false;
         progressSection.classList.add('hidden');
       }
     });
 
-    async function processImageIntelligent(file) {
+    async function processImageIntelligent(file, imageIndex) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = async (e) => {
@@ -449,16 +576,17 @@
               canvas.height = img.height;
               ctx.drawImage(img, 0, 0);
 
-              updateProgress(null, null, '🔍 Detectando balões de fala...');
+              updateProgress(null, null, `🔍 Detectando balões na imagem ${imageIndex + 1}...`);
 
               const mode = detectionMode.value;
               let textRegions = [];
 
               if (mode === 'smart') {
                 textRegions = detectSpeechBubbles(canvas, ctx);
+                totalBubblesDetected += textRegions.length;
               }
 
-              updateProgress(null, null, '📝 Extraindo texto com OCR...');
+              updateProgress(null, null, `📝 Extraindo texto da imagem ${imageIndex + 1}...`);
 
               try {
                 const result = await Tesseract.recognize(canvas, sourceLang.value, {
@@ -468,16 +596,17 @@
                 const words = result.data.words.filter(w => w.confidence > 50);
 
                 if (mode === 'smart' && textRegions.length > 0) {
-                  for (const region of textRegions) {
+                  for (let i = 0; i < textRegions.length; i++) {
+                    const region = textRegions[i];
                     const wordsInRegion = words.filter(w => 
                       isWordInRegion(w.bbox, region)
                     );
                     
                     if (wordsInRegion.length > 0) {
-                      totalBubblesDetected++;
                       const fullText = wordsInRegion.map(w => w.text).join(' ');
                       
-                      updateProgress(null, null, `🌐 Traduzindo: "${fullText.substring(0, 20)}..."`);
+                      updateProgress(null, null, 
+                        `🌐 Traduzindo balão ${i + 1}/${textRegions.length}: "${fullText.substring(0, 25)}..."`);
                       
                       const translation = await translateTextAdvanced(fullText);
                       totalTextsTranslated++;
@@ -486,9 +615,11 @@
                     }
                   }
                 } else {
-                  for (const word of words) {
+                  for (let i = 0; i < words.length; i++) {
+                    const word = words[i];
                     totalTextsTranslated++;
-                    updateProgress(null, null, `🌐 Traduzindo palavra ${totalTextsTranslated}...`);
+                    updateProgress(null, null, 
+                      `🌐 Traduzindo palavra ${i + 1}/${words.length}...`);
                     
                     const translation = await translateTextAdvanced(word.text);
                     const bbox = word.bbox;
@@ -502,11 +633,11 @@
                   }
                 }
               } catch (ocrError) {
-                console.error('OCR falhou:', ocrError);
-                throw new Error('Falha no reconhecimento de texto. Tente outra imagem.');
+                console.error('OCR Error:', ocrError);
+                throw new Error('Falha no reconhecimento de texto. Tente com imagens de melhor qualidade.');
               }
 
-              resolve(canvas.toDataURL());
+              resolve(canvas.toDataURL('image/png', 0.95));
             };
             img.onerror = () => reject(new Error('Não foi possível carregar a imagem'));
             img.src = e.target.result;
@@ -524,7 +655,7 @@
       const data = imageData.data;
       const regions = [];
       const threshold = 200;
-      const minArea = 1000;
+      const minArea = 1500;
 
       const binaryMap = new Uint8Array(canvas.width * canvas.height);
       
@@ -534,18 +665,19 @@
         const b = data[i + 2];
         const brightness = (r + g + b) / 3;
         
-        const idx = i / 4;
-        binaryMap[idx] = brightness > threshold ? 1 : 0;
+        binaryMap[i / 4] = brightness > threshold ? 1 : 0;
       }
 
-      const step = 30;
-      for (let y = 0; y < canvas.height - 60; y += step) {
-        for (let x = 0; x < canvas.width - 60; x += step) {
+      const step = 25;
+      const minSize = 50;
+      
+      for (let y = 0; y < canvas.height - minSize; y += step) {
+        for (let x = 0; x < canvas.width - minSize; x += step) {
           let whitePixels = 0;
           let totalPixels = 0;
           
-          for (let dy = 0; dy < 60; dy += 2) {
-            for (let dx = 0; dx < 60; dx += 2) {
+          for (let dy = 0; dy < minSize; dy += 3) {
+            for (let dx = 0; dx < minSize; dx += 3) {
               const idx = (y + dy) * canvas.width + (x + dx);
               if (binaryMap[idx] === 1) whitePixels++;
               totalPixels++;
@@ -554,33 +686,44 @@
           
           const whiteRatio = whitePixels / totalPixels;
           
-          if (whiteRatio > 0.7) {
-            let width = 60;
-            let height = 60;
+          if (whiteRatio > 0.75) {
+            let width = minSize;
+            let height = minSize;
             
-            while (x + width < canvas.width) {
+            while (x + width < canvas.width - 10) {
               let edgeWhite = 0;
-              for (let dy = 0; dy < height; dy += 2) {
+              let edgeTotal = 0;
+              for (let dy = 0; dy < height; dy += 3) {
                 const idx = (y + dy) * canvas.width + (x + width);
                 if (binaryMap[idx] === 1) edgeWhite++;
+                edgeTotal++;
               }
-              if (edgeWhite / (height / 2) < 0.6) break;
-              width += 10;
+              if (edgeWhite / edgeTotal < 0.65) break;
+              width += 8;
             }
             
-            while (y + height < canvas.height) {
+            while (y + height < canvas.height - 10) {
               let edgeWhite = 0;
-              for (let dx = 0; dx < width; dx += 2) {
+              let edgeTotal = 0;
+              for (let dx = 0; dx < width; dx += 3) {
                 const idx = (y + height) * canvas.width + (x + dx);
                 if (binaryMap[idx] === 1) edgeWhite++;
+                edgeTotal++;
               }
-              if (edgeWhite / (width / 2) < 0.6) break;
-              height += 10;
+              if (edgeWhite / edgeTotal < 0.65) break;
+              height += 8;
             }
             
             const area = width * height;
             if (area > minArea) {
-              regions.push({ x, y, width, height });
+              const overlap = regions.some(r => 
+                !(x > r.x + r.width || x + width < r.x || 
+                  y > r.y + r.height || y + height < r.y)
+              );
+              
+              if (!overlap) {
+                regions.push({ x, y, width, height });
+              }
             }
           }
         }
@@ -600,20 +743,25 @@
     }
 
     function cleanAndDrawText(ctx, region, text) {
+      const padding = 4;
+      
       ctx.fillStyle = 'rgba(255, 255, 255, 0.98)';
-      ctx.fillRect(region.x - 2, region.y - 2, region.width + 4, region.height + 4);
+      ctx.fillRect(region.x - padding, region.y - padding, 
+                   region.width + padding * 2, region.height + padding * 2);
       
       ctx.strokeStyle = '#000000';
       ctx.lineWidth = 1.5;
-      ctx.strokeRect(region.x - 2, region.y - 2, region.width + 4, region.height + 4);
+      ctx.strokeRect(region.x - padding, region.y - padding, 
+                     region.width + padding * 2, region.height + padding * 2);
       
       ctx.fillStyle = '#000000';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       
-      let fontSize = Math.min(region.height * 0.4, 16);
+      let fontSize = Math.min(Math.max(region.height * 0.35, 12), 18);
       ctx.font = `bold ${fontSize}px Arial, sans-serif`;
       
+      const maxWidth = region.width - 12;
       const words = text.split(' ');
       const lines = [];
       let currentLine = '';
@@ -622,8 +770,8 @@
         const testLine = currentLine + (currentLine ? ' ' : '') + word;
         const metrics = ctx.measureText(testLine);
         
-        if (metrics.width > region.width - 10) {
-          if (currentLine) lines.push(currentLine);
+        if (metrics.width > maxWidth && currentLine) {
+          lines.push(currentLine);
           currentLine = word;
         } else {
           currentLine = testLine;
@@ -631,16 +779,19 @@
       }
       if (currentLine) lines.push(currentLine);
       
-      const lineHeight = fontSize * 1.2;
+      const lineHeight = fontSize * 1.3;
       const totalHeight = lines.length * lineHeight;
       const startY = region.y + (region.height - totalHeight) / 2 + fontSize / 2;
       
       lines.forEach((line, i) => {
-        ctx.fillText(line, region.x + region.width / 2, startY + i * lineHeight);
+        const y = startY + i * lineHeight;
+        ctx.fillText(line, region.x + region.width / 2, y);
       });
     }
 
     async function translateTextAdvanced(text) {
+      if (!text || text.trim().length === 0) return text;
+      
       const sourceLangCode = getLanguageCode(sourceLang.value);
       const targetLangCode = getLanguageCode(targetLang.value);
       
@@ -653,8 +804,11 @@
       for (const api of apis) {
         try {
           const result = await api();
-          if (result && result !== text) return result;
+          if (result && result !== text && result.trim().length > 0) {
+            return result;
+          }
         } catch (e) {
+          console.log('API falhou, tentando próxima...');
           continue;
         }
       }
@@ -666,7 +820,7 @@
       const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
       const response = await fetch(url);
       const data = await response.json();
-      return data.responseStatus === 200 ? data.responseData.translatedText : text;
+      return data.responseStatus === 200 ? data.responseData.translatedText : null;
     }
 
     async function translateWithLibreTranslate(text, from, to) {
@@ -674,73 +828,5 @@
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ q: text, source: from, target: to, format: 'text' })
-      });
-      const data = await response.json();
-      return data.translatedText || text;
-    }
-
-    async function translateWithLingva(text, from, to) {
-      const url = `https://lingva.ml/api/v1/${from}/${to}/${encodeURIComponent(text)}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      return data.translation || text;
-    }
-
-    function getLanguageCode(tesseractCode) {
-      const map = {
-        'eng': 'en', 'jpn': 'ja', 'kor': 'ko', 'spa': 'es',
-        'pt': 'pt', 'en': 'en', 'es': 'es'
-      };
-      return map[tesseractCode] || tesseractCode;
-    }
-
-    function updateProgress(current, total, message) {
-      if (current !== null && total !== null) {
-        const percent = (current / total) * 100;
-        progressFill.style.width = percent + '%';
-      }
-      progressText.textContent = message;
-    }
-
-    function showResults() {
-      resultsSection.classList.remove('hidden');
-      resultsContainer.innerHTML = '';
-      
-      statsInfo.innerHTML = `
-        <strong>📊 Estatísticas:</strong><br>
-        🎯 Balões detectados: ${totalBubblesDetected || 'N/A'}<br>
-        📝 Textos traduzidos: ${totalTextsTranslated}<br>
-        🖼️ Imagens processadas: ${translatedImages.length}
-      `;
-      
-      translatedImages.forEach((imgSrc, index) => {
-        const img = document.createElement('img');
-        img.src = imgSrc;
-        img.className = 'result-image';
-        img.alt = `Página ${index + 1} traduzida`;
-        resultsContainer.appendChild(img);
-      });
-
-      progressSection.classList.add('hidden');
-      previewSection.classList.add('hidden');
-    }
-
-    function showError(message) {
-      errorAlert.textContent = message;
-      errorAlert.classList.remove('hidden');
-    }
-
-    downloadBtn.addEventListener('click', () => {
-      translatedImages.forEach((imgSrc, index) => {
-        const a = document.createElement('a');
-        a.href = imgSrc;
-        a.download = `manga-traduzido-${index + 1}.png`;
-        a.click();
-      });
-    });
-
-    newBtn.addEventListener('click', () => location.reload());
-  </script>
-</body>
-</html>
+        body: JSON.stringify({ 
+          q: text
