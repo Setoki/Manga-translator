@@ -3,322 +3,319 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tradutor de Mangá V3.5 - BALÕES AGRUPADOS</title>
+  <title>Tradutor de Mangá V4.0</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+    body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
     .container { max-width: 800px; margin: 0 auto; }
     .header { text-align: center; color: white; margin-bottom: 30px; }
-    .header h1 { font-size: 32px; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-    .version { background: rgba(255, 255, 255, 0.3); padding: 8px 20px; border-radius: 20px; font-size: 14px; display: inline-block; font-weight: bold; }
-    .card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); margin-bottom: 20px; }
-    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+    .header h1 { font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .version { background: rgba(255,255,255,0.3); padding: 8px 20px; border-radius: 20px; font-size: 14px; display: inline-block; font-weight: bold; margin-top: 10px; }
+    .card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 20px; }
+    .settings { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
     .setting-box { padding: 15px; background: #f9fafb; border-radius: 10px; }
-    .setting-box label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #374151; }
-    .setting-box select { width: 100%; padding: 10px; border: 2px solid #d1d5db; border-radius: 6px; font-size: 14px; background: white; }
-    .upload-button { width: 100%; padding: 50px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 12px; color: white; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-align: center; }
-    .upload-button:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4); }
-    .upload-button .icon { font-size: 48px; display: block; margin-bottom: 15px; }
-    .file-input-hidden { display: none; }
-    .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
+    .setting-box label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 8px; }
+    .setting-box select { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px; }
+    .upload-btn { width: 100%; padding: 50px 20px; background: linear-gradient(135deg, #667eea, #764ba2); border: none; border-radius: 12px; color: white; font-size: 18px; font-weight: bold; cursor: pointer; text-align: center; }
+    .upload-btn:hover { transform: translateY(-3px); }
+    .icon { font-size: 48px; display: block; margin-bottom: 15px; }
+    input[type="file"] { display: none; }
+    .preview { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
     .preview-item { position: relative; border-radius: 10px; overflow: hidden; border: 3px solid #e5e7eb; }
-    .preview-item img { width: 100%; height: 150px; object-fit: cover; display: block; }
-    .remove-btn { position: absolute; top: 8px; right: 8px; background: #ef4444; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 18px; font-weight: bold; }
+    .preview-item img { width: 100%; height: 150px; object-fit: cover; }
+    .remove { position: absolute; top: 8px; right: 8px; background: #ef4444; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 18px; }
     .btn { width: 100%; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; }
-    .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
     .btn-success { background: #10b981; color: white; }
     .btn-secondary { background: #6b7280; color: white; }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .progress-section { margin-top: 20px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .progress { margin-top: 20px; }
     .progress-bar { width: 100%; height: 10px; background: #e5e7eb; border-radius: 5px; overflow: hidden; margin-bottom: 10px; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); width: 0%; transition: width 0.3s; }
-    .progress-text { text-align: center; font-size: 14px; color: #6b7280; font-weight: 500; }
-    .result-image { width: 100%; border-radius: 10px; margin-bottom: 15px; border: 2px solid #e5e7eb; }
+    .progress-text { text-align: center; font-size: 14px; color: #666; }
+    .result-img { width: 100%; border-radius: 10px; margin-bottom: 15px; border: 2px solid #e5e7eb; }
     .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .alert { padding: 15px; border-radius: 10px; margin-top: 15px; font-size: 14px; }
     .alert-error { background: #fee2e2; color: #991b1b; border: 2px solid #fca5a5; }
     .alert-info { background: #dbeafe; color: #1e40af; border: 2px solid #93c5fd; }
     .hidden { display: none; }
     .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-    .stat-box { text-align: center; padding: 15px; background: #f9fafb; border-radius: 8px; }
-    .stat-number { font-size: 28px; font-weight: bold; color: #667eea; }
-    .stat-label { font-size: 12px; color: #6b7280; margin-top: 5px; }
+    .stat { text-align: center; padding: 15px; background: #f9fafb; border-radius: 8px; }
+    .stat-num { font-size: 28px; font-weight: bold; color: #667eea; }
+    .stat-label { font-size: 12px; color: #666; margin-top: 5px; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
       <h1>🌐 Tradutor de Mangá PRO</h1>
-      <div class="version">⚡ V3.5 - BALÕES AGRUPADOS</div>
+      <div class="version">⚡ V4.0 - SEM LETRAS SOLTAS</div>
     </div>
 
     <div class="card">
-      <div class="settings-grid">
+      <div class="settings">
         <div class="setting-box">
-          <label>🗣️ Idioma de Origem</label>
-          <select id="sourceLang">
+          <label>🗣️ De</label>
+          <select id="from">
             <option value="eng">🇺🇸 Inglês</option>
             <option value="por">🇧🇷 Português</option>
             <option value="spa">🇪🇸 Espanhol</option>
           </select>
         </div>
         <div class="setting-box">
-          <label>🎯 Traduzir Para</label>
-          <select id="targetLang">
-            <option value="pt">🇧🇷 Português BR</option>
+          <label>🎯 Para</label>
+          <select id="to">
+            <option value="pt">🇧🇷 Português</option>
             <option value="en">🇺🇸 Inglês</option>
             <option value="es">🇪🇸 Espanhol</option>
           </select>
         </div>
       </div>
 
-      <button class="upload-button" id="uploadBtn">
+      <button class="upload-btn" id="upload">
         <span class="icon">📤</span>
-        <div>CLIQUE PARA ESCOLHER IMAGENS</div>
-        <div style="font-size: 14px; margin-top: 10px; opacity: 0.9;">Até 2 imagens por vez</div>
+        <div>CLIQUE PARA ESCOLHER</div>
+        <div style="font-size: 14px; margin-top: 10px; opacity: 0.9;">Até 2 imagens</div>
       </button>
-      <input type="file" id="fileInput" class="file-input-hidden" accept="image/*" multiple>
+      <input type="file" id="file" accept="image/*" multiple>
       
-      <div id="previewSection" class="hidden">
-        <h3 style="margin-top: 20px; margin-bottom: 10px;">📸 Imagens:</h3>
-        <div id="previewGrid" class="preview-grid"></div>
-        <button class="btn btn-primary" id="translateBtn">🚀 TRADUZIR COM AGRUPAMENTO INTELIGENTE</button>
+      <div id="prev" class="hidden">
+        <h3 style="margin-top: 20px;">📸 Imagens:</h3>
+        <div id="grid" class="preview"></div>
+        <button class="btn btn-primary" id="go">🚀 TRADUZIR</button>
       </div>
 
-      <div id="progressSection" class="hidden progress-section">
-        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-        <div class="progress-text" id="progressText">Processando...</div>
+      <div id="prog" class="hidden progress">
+        <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+        <div class="progress-text" id="text">Processando...</div>
       </div>
     </div>
 
-    <div id="resultsSection" class="card hidden">
-      <h3 style="text-align: center; color: #10b981; margin-bottom: 20px;">✅ Tradução Concluída!</h3>
+    <div id="results" class="card hidden">
+      <h3 style="text-align: center; color: #10b981; margin-bottom: 20px;">✅ Concluído!</h3>
       <div class="stats">
-        <div class="stat-box"><div class="stat-number" id="statBalloons">0</div><div class="stat-label">Balões</div></div>
-        <div class="stat-box"><div class="stat-number" id="statTranslated">0</div><div class="stat-label">Traduções</div></div>
-        <div class="stat-box"><div class="stat-number" id="statImages">0</div><div class="stat-label">Imagens</div></div>
+        <div class="stat"><div class="stat-num" id="sb">0</div><div class="stat-label">Balões</div></div>
+        <div class="stat"><div class="stat-num" id="st">0</div><div class="stat-label">Traduções</div></div>
+        <div class="stat"><div class="stat-num" id="si">0</div><div class="stat-label">Imagens</div></div>
       </div>
-      <div id="resultsContainer"></div>
+      <div id="out"></div>
       <div class="btn-group">
-        <button class="btn btn-success" id="downloadBtn">💾 Baixar</button>
-        <button class="btn btn-secondary" id="newBtn">🔄 Nova</button>
+        <button class="btn btn-success" id="dl">💾 Baixar</button>
+        <button class="btn btn-secondary" id="new">🔄 Nova</button>
       </div>
     </div>
 
     <div class="alert alert-info">
-      <strong>💡 NOVO: Sistema de Agrupamento</strong><br>
-      ✨ Agrupa palavras próximas no mesmo balão<br>
-      🎯 Traduz o texto completo junto<br>
-      📦 Uma caixa por balão (não mais palavras soltas!)
+      <strong>💡 V4.0 - Melhorias:</strong><br>
+      ✅ Ignora letras/números soltos (mín. 3 caracteres)<br>
+      ✅ Agrupa balões com distância maior (120px)<br>
+      ✅ Filtra confiança mínima 50%
     </div>
-    <div id="errorAlert" class="alert alert-error hidden"></div>
+    <div id="err" class="alert alert-error hidden"></div>
   </div>
 
   <script>
-    const uploadBtn = document.getElementById('uploadBtn');
-    const fileInput = document.getElementById('fileInput');
-    const previewSection = document.getElementById('previewSection');
-    const previewGrid = document.getElementById('previewGrid');
-    const translateBtn = document.getElementById('translateBtn');
-    const progressSection = document.getElementById('progressSection');
-    const progressFill = document.getElementById('progressFill');
-    const progressText = document.getElementById('progressText');
-    const resultsSection = document.getElementById('resultsSection');
-    const resultsContainer = document.getElementById('resultsContainer');
-    const statBalloons = document.getElementById('statBalloons');
-    const statTranslated = document.getElementById('statTranslated');
-    const statImages = document.getElementById('statImages');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const newBtn = document.getElementById('newBtn');
-    const sourceLang = document.getElementById('sourceLang');
-    const targetLang = document.getElementById('targetLang');
-    const errorAlert = document.getElementById('errorAlert');
+    const upload = document.getElementById('upload');
+    const file = document.getElementById('file');
+    const prev = document.getElementById('prev');
+    const grid = document.getElementById('grid');
+    const go = document.getElementById('go');
+    const prog = document.getElementById('prog');
+    const fill = document.getElementById('fill');
+    const text = document.getElementById('text');
+    const results = document.getElementById('results');
+    const out = document.getElementById('out');
+    const sb = document.getElementById('sb');
+    const st = document.getElementById('st');
+    const si = document.getElementById('si');
+    const dl = document.getElementById('dl');
+    const newBtn = document.getElementById('new');
+    const from = document.getElementById('from');
+    const to = document.getElementById('to');
+    const err = document.getElementById('err');
 
-    let selectedFiles = [];
-    let translatedImages = [];
-    let totalBalloons = 0;
-    let totalTranslated = 0;
+    let files = [];
+    let imgs = [];
+    let tb = 0;
+    let tt = 0;
 
-    uploadBtn.onclick = () => fileInput.click();
+    upload.onclick = () => file.click();
 
-    fileInput.onchange = function(e) {
-      const files = Array.from(e.target.files);
-      if (files.length === 0) return showError('Nenhum arquivo!');
-      if (files.length > 2) return showError('Máximo 2 imagens!');
-      selectedFiles = files;
-      displayPreview();
-      hideError();
+    file.onchange = e => {
+      const f = Array.from(e.target.files);
+      if (f.length === 0) return showErr('Nenhum arquivo!');
+      if (f.length > 2) return showErr('Máximo 2 imagens!');
+      files = f;
+      showPreview();
+      hideErr();
     };
 
-    function displayPreview() {
-      previewGrid.innerHTML = '';
-      previewSection.classList.remove('hidden');
-      selectedFiles.forEach((file, i) => {
-        const reader = new FileReader();
-        reader.onload = e => {
-          const div = document.createElement('div');
-          div.className = 'preview-item';
-          div.innerHTML = '<img src="' + e.target.result + '"><button class="remove-btn" onclick="removeImage(' + i + ')">×</button>';
-          previewGrid.appendChild(div);
+    function showPreview() {
+      grid.innerHTML = '';
+      prev.classList.remove('hidden');
+      files.forEach((f, i) => {
+        const r = new FileReader();
+        r.onload = e => {
+          const d = document.createElement('div');
+          d.className = 'preview-item';
+          d.innerHTML = '<img src="' + e.target.result + '"><button class="remove" onclick="removeImg(' + i + ')">×</button>';
+          grid.appendChild(d);
         };
-        reader.readAsDataURL(file);
+        r.readAsDataURL(f);
       });
     }
 
-    window.removeImage = i => {
-      selectedFiles.splice(i, 1);
-      selectedFiles.length === 0 ? (previewSection.classList.add('hidden'), fileInput.value = '') : displayPreview();
+    window.removeImg = i => {
+      files.splice(i, 1);
+      files.length === 0 ? (prev.classList.add('hidden'), file.value = '') : showPreview();
     };
 
-    translateBtn.onclick = async function() {
-      translateBtn.disabled = true;
-      progressSection.classList.remove('hidden');
-      resultsSection.classList.add('hidden');
-      translatedImages = [];
-      totalBalloons = 0;
-      totalTranslated = 0;
+    go.onclick = async () => {
+      go.disabled = true;
+      prog.classList.remove('hidden');
+      results.classList.add('hidden');
+      imgs = [];
+      tb = 0;
+      tt = 0;
 
       try {
-        for (let i = 0; i < selectedFiles.length; i++) {
-          updateProgress(i, selectedFiles.length, 'Processando ' + (i + 1) + '/' + selectedFiles.length);
-          const result = await processWithGrouping(selectedFiles[i], i + 1);
-          translatedImages.push(result);
+        for (let i = 0; i < files.length; i++) {
+          upd(i, files.length, 'Processando ' + (i + 1) + '/' + files.length);
+          const r = await proc(files[i], i + 1);
+          imgs.push(r);
         }
-        updateProgress(selectedFiles.length, selectedFiles.length, 'Concluído!');
-        showResults();
+        upd(files.length, files.length, 'Concluído!');
+        showRes();
       } catch (error) {
-        showError('Erro: ' + error.message);
-        translateBtn.disabled = false;
-        progressSection.classList.add('hidden');
+        showErr('Erro: ' + error.message);
+        go.disabled = false;
+        prog.classList.add('hidden');
       }
     };
 
-    async function processWithGrouping(file, num) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = async e => {
+    async function proc(f, n) {
+      return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = async e => {
           const img = new Image();
           img.onload = async () => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = img.width;
-            canvas.height = img.height;
+            const c = document.createElement('canvas');
+            const ctx = c.getContext('2d');
+            c.width = img.width;
+            c.height = img.height;
             ctx.drawImage(img, 0, 0);
 
-            updateProgress(null, null, '🔍 OCR na imagem ' + num + '...');
+            upd(null, null, '🔍 OCR ' + n + '...');
 
             try {
-              const result = await Tesseract.recognize(canvas, sourceLang.value, {
-                logger: m => m.status === 'recognizing text' && updateProgress(null, null, 'OCR: ' + Math.round(m.progress * 100) + '%')
+              const ocr = await Tesseract.recognize(c, from.value, {
+                logger: m => m.status === 'recognizing text' && upd(null, null, 'OCR: ' + Math.round(m.progress * 100) + '%')
               });
 
-              const words = result.data.words.filter(w => w.confidence > 45 && w.text.trim().length > 0);
-              console.log('Palavras detectadas:', words.length);
+              // FILTROS RIGOROSOS
+              const words = ocr.data.words.filter(w => 
+                w.confidence > 50 && 
+                w.text.trim().length >= 3 && // MÍNIMO 3 CARACTERES
+                /[a-zA-Z]{2,}/.test(w.text) // DEVE TER PELO MENOS 2 LETRAS SEGUIDAS
+              );
 
-              // AGRUPAR PALAVRAS PRÓXIMAS
-              const groups = groupNearbyWords(words, 80);
-              console.log('Balões agrupados:', groups.length);
+              console.log('Palavras válidas:', words.length);
+
+              const groups = group(words, 120); // DISTÂNCIA MAIOR = 120px
+              console.log('Balões:', groups.length);
               
-              totalBalloons += groups.length;
+              tb += groups.length;
 
               for (let i = 0; i < groups.length; i++) {
-                const group = groups[i];
-                updateProgress(null, null, '🌐 Traduzindo balão ' + (i + 1) + '/' + groups.length);
+                const g = groups[i];
+                upd(null, null, '🌐 Balão ' + (i + 1) + '/' + groups.length);
                 
-                const fullText = group.words.map(w => w.text).join(' ');
-                const translation = await translateText(fullText);
-                totalTranslated++;
+                const txt = g.words.map(w => w.text).join(' ');
+                const trans = await translate(txt);
+                tt++;
 
-                // Desenhar UMA caixa para todo o grupo
-                drawTextBox(ctx, group.bbox, translation);
+                draw(ctx, g.bbox, trans);
               }
 
-              resolve(canvas.toDataURL('image/png'));
-            } catch (err) {
-              reject(new Error('Falha no OCR'));
+              res(c.toDataURL('image/png'));
+            } catch (e) {
+              rej(new Error('Falha OCR'));
             }
           };
-          img.onerror = () => reject(new Error('Erro ao carregar imagem'));
+          img.onerror = () => rej(new Error('Erro carregar'));
           img.src = e.target.result;
         };
-        reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
-        reader.readAsDataURL(file);
+        r.onerror = () => rej(new Error('Erro ler'));
+        r.readAsDataURL(f);
       });
     }
 
-    function groupNearbyWords(words, maxDistance) {
+    function group(words, maxDist) {
       if (words.length === 0) return [];
       
-      const groups = [];
+      const grps = [];
       const used = new Set();
 
-      words.forEach((word, i) => {
+      words.forEach((w, i) => {
         if (used.has(i)) return;
         
-        const group = {
-          words: [word],
-          bbox: { ...word.bbox }
+        const g = {
+          words: [w],
+          bbox: { ...w.bbox }
         };
         used.add(i);
 
-        // Buscar palavras próximas
-        words.forEach((other, j) => {
+        words.forEach((o, j) => {
           if (i === j || used.has(j)) return;
           
-          const dist = Math.sqrt(
-            Math.pow((word.bbox.x0 + word.bbox.x1)/2 - (other.bbox.x0 + other.bbox.x1)/2, 2) +
-            Math.pow((word.bbox.y0 + word.bbox.y1)/2 - (other.bbox.y0 + other.bbox.y1)/2, 2)
-          );
+          const dx = (w.bbox.x0 + w.bbox.x1)/2 - (o.bbox.x0 + o.bbox.x1)/2;
+          const dy = (w.bbox.y0 + w.bbox.y1)/2 - (o.bbox.y0 + o.bbox.y1)/2;
+          const dist = Math.sqrt(dx*dx + dy*dy);
 
-          if (dist < maxDistance) {
-            group.words.push(other);
-            group.bbox.x0 = Math.min(group.bbox.x0, other.bbox.x0);
-            group.bbox.y0 = Math.min(group.bbox.y0, other.bbox.y0);
-            group.bbox.x1 = Math.max(group.bbox.x1, other.bbox.x1);
-            group.bbox.y1 = Math.max(group.bbox.y1, other.bbox.y1);
+          if (dist < maxDist) {
+            g.words.push(o);
+            g.bbox.x0 = Math.min(g.bbox.x0, o.bbox.x0);
+            g.bbox.y0 = Math.min(g.bbox.y0, o.bbox.y0);
+            g.bbox.x1 = Math.max(g.bbox.x1, o.bbox.x1);
+            g.bbox.y1 = Math.max(g.bbox.y1, o.bbox.y1);
             used.add(j);
           }
         });
 
-        if (group.words.length > 0) groups.push(group);
+        if (g.words.length > 0) grps.push(g);
       });
 
-      return groups;
+      return grps;
     }
 
-    function drawTextBox(ctx, bbox, text) {
-      const pad = 8;
-      const x = bbox.x0 - pad;
-      const y = bbox.y0 - pad;
-      const w = bbox.x1 - bbox.x0 + pad * 2;
-      const h = bbox.y1 - bbox.y0 + pad * 2;
+    function draw(ctx, bbox, txt) {
+      const p = 10;
+      const x = bbox.x0 - p;
+      const y = bbox.y0 - p;
+      const w = bbox.x1 - bbox.x0 + p * 2;
+      const h = bbox.y1 - bbox.y0 + p * 2;
 
-      // Fundo branco
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.98)';
+      ctx.fillStyle = 'rgba(255,255,255,0.98)';
       ctx.fillRect(x, y, w, h);
 
-      // Borda
       ctx.strokeStyle = '#000';
       ctx.lineWidth = 2;
       ctx.strokeRect(x, y, w, h);
 
-      // Texto
       ctx.fillStyle = '#000';
-      const fontSize = Math.max(Math.min(h * 0.4, 16), 12);
-      ctx.font = 'bold ' + fontSize + 'px Arial';
+      const fs = Math.max(Math.min(h * 0.4, 18), 12);
+      ctx.font = 'bold ' + fs + 'px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
-      // Quebrar linhas
-      const words = text.split(' ');
+      const words = txt.split(' ');
       const lines = [];
       let line = '';
       
       words.forEach(word => {
         const test = line + (line ? ' ' : '') + word;
-        if (ctx.measureText(test).width > w - 16 && line) {
+        if (ctx.measureText(test).width > w - 20 && line) {
           lines.push(line);
           line = word;
         } else {
@@ -327,65 +324,65 @@
       });
       if (line) lines.push(line);
 
-      const lineHeight = fontSize * 1.2;
-      const startY = y + h / 2 - (lines.length * lineHeight) / 2 + fontSize / 2;
+      const lh = fs * 1.2;
+      const sy = y + h / 2 - (lines.length * lh) / 2 + fs / 2;
 
-      lines.forEach((l, i) => ctx.fillText(l, x + w / 2, startY + i * lineHeight));
+      lines.forEach((l, i) => ctx.fillText(l, x + w / 2, sy + i * lh));
     }
 
-    async function translateText(text) {
-      if (!text || text.trim().length === 0) return text;
-      const from = getLangCode(sourceLang.value);
-      const to = targetLang.value;
+    async function translate(txt) {
+      if (!txt || txt.trim().length === 0) return txt;
+      const fromLang = getLang(from.value);
+      const toLang = to.value;
 
       try {
-        const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=' + from + '|' + to;
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data.responseStatus === 200) return data.responseData.translatedText;
+        const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(txt) + '&langpair=' + fromLang + '|' + toLang;
+        const r = await fetch(url);
+        const d = await r.json();
+        if (d.responseStatus === 200 && d.responseData.translatedText) return d.responseData.translatedText;
       } catch (e) {}
 
-      return text;
+      return txt;
     }
 
-    function getLangCode(code) {
+    function getLang(c) {
       const map = { 'eng': 'en', 'por': 'pt', 'spa': 'es' };
-      return map[code] || code;
+      return map[c] || c;
     }
 
-    function updateProgress(current, total, msg) {
-      if (current !== null && total !== null) progressFill.style.width = (current / total) * 100 + '%';
-      progressText.textContent = msg;
+    function upd(cur, tot, msg) {
+      if (cur !== null && tot !== null) fill.style.width = (cur / tot) * 100 + '%';
+      text.textContent = msg;
     }
 
-    function showResults() {
-      resultsSection.classList.remove('hidden');
-      resultsContainer.innerHTML = '';
-      statBalloons.textContent = totalBalloons;
-      statTranslated.textContent = totalTranslated;
-      statImages.textContent = translatedImages.length;
-      translatedImages.forEach((src, i) => {
+    function showRes() {
+      results.classList.remove('hidden');
+      out.innerHTML = '';
+      sb.textContent = tb;
+      st.textContent = tt;
+      si.textContent = imgs.length;
+      imgs.forEach(src => {
         const img = document.createElement('img');
         img.src = src;
-        img.className = 'result-image';
-        resultsContainer.appendChild(img);
+        img.className = 'result-img';
+        out.appendChild(img);
       });
-      progressSection.classList.add('hidden');
-      previewSection.classList.add('hidden');
-      translateBtn.disabled = false;
+      prog.classList.add('hidden');
+      prev.classList.add('hidden');
+      go.disabled = false;
     }
 
-    function showError(msg) {
-      errorAlert.textContent = '❌ ' + msg;
-      errorAlert.classList.remove('hidden');
+    function showErr(m) {
+      err.textContent = '❌ ' + m;
+      err.classList.remove('hidden');
     }
 
-    function hideError() {
-      errorAlert.classList.add('hidden');
+    function hideErr() {
+      err.classList.add('hidden');
     }
 
-    downloadBtn.onclick = () => {
-      translatedImages.forEach((src, i) => {
+    dl.onclick = () => {
+      imgs.forEach((src, i) => {
         const a = document.createElement('a');
         a.href = src;
         a.download = 'manga-' + (i + 1) + '.png';
@@ -397,7 +394,7 @@
 
     newBtn.onclick = () => location.reload();
 
-    console.log('✅ V3.5 - Sistema de agrupamento ativado!');
+    console.log('✅ V4.0 - Filtros rigorosos ativados!');
   </script>
 </body>
 </html>
