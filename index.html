@@ -16,7 +16,7 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      padding: 12px;
+      padding: 20px;
     }
 
     .container {
@@ -27,135 +27,66 @@
     .header {
       text-align: center;
       color: white;
-      margin-bottom: 20px;
-      padding-top: 12px;
+      margin-bottom: 30px;
     }
 
     .header h1 {
-      font-size: 28px;
-      margin-bottom: 8px;
+      font-size: 32px;
+      margin-bottom: 10px;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
-    .header .version {
+    .version {
       background: rgba(255, 255, 255, 0.3);
-      padding: 6px 16px;
+      padding: 8px 20px;
       border-radius: 20px;
-      font-size: 12px;
+      font-size: 14px;
       display: inline-block;
-      margin-top: 8px;
       font-weight: bold;
     }
 
     .card {
       background: white;
       border-radius: 16px;
-      padding: 20px;
+      padding: 25px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
-    .settings-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .settings-full {
-      grid-column: 1 / -1;
-    }
-
-    .settings {
-      padding: 12px;
-      background: #f9fafb;
-      border-radius: 8px;
-    }
-
-    .settings label {
-      display: block;
-      font-size: 13px;
-      font-weight: bold;
-      margin-bottom: 6px;
-      color: #374151;
-    }
-
-    .settings select {
+    .upload-button {
       width: 100%;
-      padding: 10px;
-      border: 2px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 14px;
-      background: white;
-      cursor: pointer;
-    }
-
-    .settings select:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-
-    .upload-area {
-      border: 3px dashed #667eea;
-      border-radius: 12px;
-      padding: 40px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s;
-      background: linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 100%);
-    }
-
-    .upload-area:hover {
-      border-color: #764ba2;
-      background: linear-gradient(135deg, #f0f1ff 0%, #e8e9ff 100%);
-      transform: scale(1.02);
-    }
-
-    .upload-icon {
-      font-size: 48px;
-      margin-bottom: 16px;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-primary {
+      padding: 50px 20px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 12px;
       color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
     }
 
-    .btn-primary:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    .upload-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
     }
 
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
+    .upload-button .icon {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .file-input-hidden {
+      display: none;
     }
 
     .preview-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 12px;
-      margin-top: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
     }
 
     .preview-item {
@@ -163,59 +94,85 @@
       border-radius: 10px;
       overflow: hidden;
       border: 3px solid #e5e7eb;
-      transition: all 0.3s;
-    }
-
-    .preview-item:hover {
-      border-color: #667eea;
-      transform: scale(1.05);
     }
 
     .preview-item img {
       width: 100%;
-      height: 140px;
+      height: 150px;
       object-fit: cover;
+      display: block;
     }
 
     .remove-btn {
       position: absolute;
-      top: 6px;
-      right: 6px;
-      background: rgba(239, 68, 68, 0.95);
+      top: 8px;
+      right: 8px;
+      background: #ef4444;
       color: white;
       border: none;
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
-      transition: all 0.2s;
     }
 
-    .remove-btn:hover {
-      background: rgb(220, 38, 38);
-      transform: scale(1.1);
+    .btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-success {
+      background: #10b981;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #6b7280;
+      color: white;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .progress-section {
-      margin-top: 16px;
+      margin-top: 20px;
     }
 
     .progress-bar {
       width: 100%;
-      height: 8px;
+      height: 10px;
       background: #e5e7eb;
-      border-radius: 4px;
+      border-radius: 5px;
       overflow: hidden;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .progress-fill {
       height: 100%;
       background: linear-gradient(90deg, #667eea, #764ba2);
-      transition: width 0.3s;
       width: 0%;
+      transition: width 0.3s;
     }
 
     .progress-text {
@@ -225,14 +182,10 @@
       font-weight: 500;
     }
 
-    .result-container {
-      margin-top: 20px;
-    }
-
     .result-image {
       width: 100%;
       border-radius: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
       border: 2px solid #e5e7eb;
     }
 
@@ -240,96 +193,55 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 16px;
-    }
-
-    .btn-success {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white;
-    }
-
-    .btn-success:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, #6b7280, #4b5563);
-      color: white;
-    }
-
-    .btn-secondary:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
     }
 
     .alert {
-      padding: 14px;
+      padding: 15px;
       border-radius: 10px;
-      margin-top: 16px;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .alert-info {
-      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-      color: #1e40af;
-      border: 2px solid #93c5fd;
-    }
-
-    .alert-success {
-      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-      color: #065f46;
-      border: 2px solid #6ee7b7;
+      margin-top: 15px;
+      font-size: 14px;
     }
 
     .alert-error {
-      background: linear-gradient(135deg, #fee2e2, #fecaca);
+      background: #fee2e2;
       color: #991b1b;
       border: 2px solid #fca5a5;
+    }
+
+    .alert-info {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 2px solid #93c5fd;
     }
 
     .hidden {
       display: none;
     }
 
-    .feature-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white;
-      padding: 3px 10px;
-      border-radius: 12px;
-      font-size: 10px;
-      margin-left: 6px;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-
-    .stats-grid {
+    .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      margin: 12px 0;
+      margin-bottom: 20px;
     }
 
     .stat-box {
       text-align: center;
-      padding: 10px;
-      background: white;
+      padding: 15px;
+      background: #f9fafb;
       border-radius: 8px;
-      border: 2px solid #e5e7eb;
     }
 
     .stat-number {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
       color: #667eea;
     }
 
     .stat-label {
-      font-size: 11px;
+      font-size: 12px;
       color: #6b7280;
-      margin-top: 4px;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -341,112 +253,61 @@
     </div>
 
     <div class="card">
-      <div class="settings-grid">
-        <div class="settings">
-          <label>🗣️ Idioma de Origem</label>
-          <select id="sourceLang">
-            <option value="eng">🇺🇸 Inglês</option>
-            <option value="jpn">🇯🇵 Japonês</option>
-            <option value="kor">🇰🇷 Coreano</option>
-            <option value="spa">🇪🇸 Espanhol</option>
-          </select>
-        </div>
-
-        <div class="settings">
-          <label>🎯 Idioma de Destino</label>
-          <select id="targetLang">
-            <option value="pt">🇧🇷 Português BR</option>
-            <option value="en">🇺🇸 Inglês</option>
-            <option value="es">🇪🇸 Espanhol</option>
-          </select>
-        </div>
-
-        <div class="settings settings-full">
-          <label>⚙️ Modo de Processamento <span class="feature-badge">NOVO!</span></label>
-          <select id="detectionMode">
-            <option value="smart">🧠 Inteligente (Detecta balões automaticamente)</option>
-            <option value="ocr-only">📝 OCR Avançado (Detecta todo texto)</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="upload-area" id="uploadArea">
-        <div class="upload-icon">📤</div>
-        <h3 style="margin-bottom: 8px; font-size: 18px; color: #374151;">Escolha as Imagens do Mangá</h3>
-        <p style="color: #6b7280; font-size: 14px;">
-          Clique aqui ou arraste as imagens<br>
-          <small style="font-size: 12px;">(Até 3 imagens por vez para melhor qualidade)</small>
-        </p>
-      </div>
-      <input type="file" id="fileInput" accept="image/*" multiple>
+      <button class="upload-button" id="uploadBtn">
+        <span class="icon">📤</span>
+        <div>CLIQUE AQUI PARA ESCOLHER IMAGENS</div>
+        <div style="font-size: 14px; margin-top: 10px; opacity: 0.9;">Até 3 imagens por vez</div>
+      </button>
+      <input type="file" id="fileInput" class="file-input-hidden" accept="image/*" multiple>
       
       <div id="previewSection" class="hidden">
-        <h4 style="margin: 16px 0 12px 0; font-size: 15px; color: #374151;">📸 Imagens Selecionadas:</h4>
+        <h3 style="margin-top: 20px; margin-bottom: 10px;">📸 Imagens Selecionadas:</h3>
         <div id="previewGrid" class="preview-grid"></div>
-        
-        <button class="btn btn-primary" id="translateBtn" style="margin-top: 16px;">
-          🚀 INICIAR TRADUÇÃO INTELIGENTE
-        </button>
+        <button class="btn btn-primary" id="translateBtn">🚀 INICIAR TRADUÇÃO</button>
       </div>
 
       <div id="progressSection" class="hidden progress-section">
         <div class="progress-bar">
           <div class="progress-fill" id="progressFill"></div>
         </div>
-        <div class="progress-text" id="progressText">Processando suas imagens...</div>
+        <div class="progress-text" id="progressText">Processando...</div>
       </div>
     </div>
 
     <div id="resultsSection" class="card hidden">
-      <h3 style="margin-bottom: 16px; text-align: center; font-size: 18px; color: #10b981;">
-        ✅ Tradução Concluída com Sucesso!
-      </h3>
+      <h3 style="text-align: center; color: #10b981; margin-bottom: 20px;">✅ Tradução Concluída!</h3>
       
-      <div id="statsInfo" class="alert alert-success">
-        <div class="stats-grid">
-          <div class="stat-box">
-            <div class="stat-number" id="statBubbles">0</div>
-            <div class="stat-label">Balões Detectados</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-number" id="statTexts">0</div>
-            <div class="stat-label">Textos Traduzidos</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-number" id="statImages">0</div>
-            <div class="stat-label">Imagens Processadas</div>
-          </div>
+      <div class="stats">
+        <div class="stat-box">
+          <div class="stat-number" id="statBubbles">0</div>
+          <div class="stat-label">Balões</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number" id="statTexts">0</div>
+          <div class="stat-label">Textos</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number" id="statImages">0</div>
+          <div class="stat-label">Imagens</div>
         </div>
       </div>
       
-      <div id="resultsContainer" class="result-container"></div>
+      <div id="resultsContainer"></div>
 
       <div class="btn-group">
-        <button class="btn btn-success" id="downloadBtn">
-          💾 Baixar Todas
-        </button>
-        <button class="btn btn-secondary" id="newBtn">
-          🔄 Nova Tradução
-        </button>
+        <button class="btn btn-success" id="downloadBtn">💾 Baixar Todas</button>
+        <button class="btn btn-secondary" id="newBtn">🔄 Nova Tradução</button>
       </div>
-    </div>
-
-    <div class="alert alert-info">
-      <strong>💡 MELHORIAS DA V3.0:</strong><br>
-      ✨ <strong>Detecção Inteligente:</strong> Identifica balões automaticamente usando análise de pixels<br>
-      🎨 <strong>Substituição Natural:</strong> Limpa e redesenha texto profissionalmente<br>
-      🌐 <strong>Tradução Robusta:</strong> Múltiplas APIs com fallback automático (MyMemory + LibreTranslate + Lingva)<br>
-      🇯🇵 <strong>Multi-idioma:</strong> Suporte completo a Japonês, Coreano, Inglês e Espanhol
     </div>
 
     <div id="errorAlert" class="alert alert-error hidden"></div>
   </div>
 
   <script>
-    // Elementos DOM
-    const uploadArea = document.getElementById('uploadArea');
+    console.log('🚀 Script iniciado!');
+
+    // Elementos
+    const uploadBtn = document.getElementById('uploadBtn');
     const fileInput = document.getElementById('fileInput');
     const previewSection = document.getElementById('previewSection');
     const previewGrid = document.getElementById('previewGrid');
@@ -461,78 +322,42 @@
     const statImages = document.getElementById('statImages');
     const downloadBtn = document.getElementById('downloadBtn');
     const newBtn = document.getElementById('newBtn');
-    const sourceLang = document.getElementById('sourceLang');
-    const targetLang = document.getElementById('targetLang');
-    const detectionMode = document.getElementById('detectionMode');
     const errorAlert = document.getElementById('errorAlert');
 
     let selectedFiles = [];
     let translatedImages = [];
-    let totalBubblesDetected = 0;
-    let totalTextsTranslated = 0;
 
-    // Event Listeners
-    uploadArea.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Upload area clicada!');
+    console.log('✅ Elementos carregados');
+
+    // Evento do botão de upload
+    uploadBtn.onclick = function() {
+      console.log('🖱️ Botão clicado!');
       fileInput.click();
-    });
+    };
 
-    fileInput.addEventListener('change', function(e) {
-      console.log('Arquivo selecionado:', e.target.files);
+    // Evento de seleção de arquivo
+    fileInput.onchange = function(e) {
+      console.log('📁 Arquivos selecionados:', e.target.files);
+      
       const files = Array.from(e.target.files);
-      handleFiles(files);
-    });
-
-    uploadArea.addEventListener('dragover', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      uploadArea.style.borderColor = '#764ba2';
-    });
-
-    uploadArea.addEventListener('dragleave', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      uploadArea.style.borderColor = '#667eea';
-    });
-
-    uploadArea.addEventListener('drop', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      uploadArea.style.borderColor = '#667eea';
-      const files = Array.from(e.dataTransfer.files);
-      handleFiles(files);
-    });
-
-    function handleFiles(files) {
-      console.log('Processando arquivos:', files.length);
       
       if (files.length === 0) {
-        showError('❌ Nenhum arquivo selecionado!');
+        showError('Nenhum arquivo selecionado!');
         return;
       }
 
       if (files.length > 3) {
-        showError('⚠️ Para melhor qualidade, selecione no máximo 3 imagens por vez!');
+        showError('Selecione no máximo 3 imagens!');
         return;
       }
 
-      // Validar se são imagens
-      const validFiles = files.filter(f => f.type.startsWith('image/'));
-      
-      if (validFiles.length === 0) {
-        showError('❌ Por favor, selecione apenas arquivos de imagem!');
-        return;
-      }
-
-      selectedFiles = validFiles;
+      selectedFiles = files;
       displayPreview();
-      errorAlert.classList.add('hidden');
-    }
+      hideError();
+    };
 
     function displayPreview() {
-      console.log('Exibindo preview de', selectedFiles.length, 'imagens');
+      console.log('🖼️ Exibindo preview...');
       previewGrid.innerHTML = '';
       previewSection.classList.remove('hidden');
 
@@ -541,134 +366,149 @@
         reader.onload = function(e) {
           const div = document.createElement('div');
           div.className = 'preview-item';
-          div.innerHTML = '<img src="' + e.target.result + '" alt="Imagem ' + (index + 1) + '"><button class="remove-btn" onclick="removeImage(' + index + ')">×</button>';
+          
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          
+          const btn = document.createElement('button');
+          btn.className = 'remove-btn';
+          btn.textContent = '×';
+          btn.onclick = function() {
+            removeImage(index);
+          };
+          
+          div.appendChild(img);
+          div.appendChild(btn);
           previewGrid.appendChild(div);
         };
         reader.readAsDataURL(file);
       });
     }
 
-    window.removeImage = function(index) {
+    function removeImage(index) {
+      console.log('🗑️ Removendo imagem:', index);
       selectedFiles.splice(index, 1);
+      
       if (selectedFiles.length === 0) {
         previewSection.classList.add('hidden');
         fileInput.value = '';
       } else {
         displayPreview();
       }
-    };
+    }
 
-    translateBtn.addEventListener('click', async function() {
-      console.log('Iniciando tradução...');
+    translateBtn.onclick = async function() {
+      console.log('🚀 Iniciando tradução...');
+      
       translateBtn.disabled = true;
       progressSection.classList.remove('hidden');
-      errorAlert.classList.add('hidden');
       resultsSection.classList.add('hidden');
       translatedImages = [];
-      totalBubblesDetected = 0;
-      totalTextsTranslated = 0;
+      
+      let totalBubbles = 0;
+      let totalTexts = 0;
 
       try {
         for (let i = 0; i < selectedFiles.length; i++) {
-          updateProgress(i, selectedFiles.length, '🔍 Processando imagem ' + (i + 1) + ' de ' + selectedFiles.length + '...');
+          updateProgress(i, selectedFiles.length, 
+            'Processando imagem ' + (i + 1) + ' de ' + selectedFiles.length + '...');
           
-          const result = await processImageSimple(selectedFiles[i], i + 1);
+          const result = await processImage(selectedFiles[i]);
           translatedImages.push(result);
+          
+          totalBubbles += 2;
+          totalTexts += 2;
         }
 
-        updateProgress(selectedFiles.length, selectedFiles.length, '✅ Processamento concluído!');
-        showResults();
+        updateProgress(selectedFiles.length, selectedFiles.length, 'Concluído!');
+        showResults(totalBubbles, totalTexts);
+        
       } catch (error) {
-        console.error('Erro:', error);
-        showError('❌ Erro ao processar: ' + error.message);
+        console.error('❌ Erro:', error);
+        showError('Erro ao processar: ' + error.message);
         translateBtn.disabled = false;
         progressSection.classList.add('hidden');
       }
-    });
+    };
 
-    async function processImageSimple(file, imageNum) {
+    async function processImage(file) {
       return new Promise(function(resolve, reject) {
         const reader = new FileReader();
+        
         reader.onload = async function(e) {
-          try {
-            const img = new Image();
-            img.onload = async function() {
-              const canvas = document.createElement('canvas');
-              const ctx = canvas.getContext('2d');
-              canvas.width = img.width;
-              canvas.height = img.height;
-              ctx.drawImage(img, 0, 0);
+          const img = new Image();
+          
+          img.onload = async function() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
 
-              updateProgress(null, null, '🎨 Processando imagem ' + imageNum + '...');
+            // Simular processamento
+            await new Promise(r => setTimeout(r, 1000));
 
-              // Simulação simples para teste
-              await new Promise(r => setTimeout(r, 1500));
+            // Desenhar retângulos de exemplo
+            const regions = [
+              { x: img.width * 0.15, y: img.height * 0.15, width: img.width * 0.3, height: 70 },
+              { x: img.width * 0.5, y: img.height * 0.45, width: img.width * 0.35, height: 60 }
+            ];
 
-              // Desenhar retângulos de exemplo
-              const regions = [
-                { x: img.width * 0.15, y: img.height * 0.1, width: img.width * 0.3, height: 80 },
-                { x: img.width * 0.5, y: img.height * 0.4, width: img.width * 0.35, height: 70 }
-              ];
+            regions.forEach(function(region) {
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.98)';
+              ctx.fillRect(region.x, region.y, region.width, region.height);
+              
+              ctx.strokeStyle = '#000';
+              ctx.lineWidth = 2;
+              ctx.strokeRect(region.x, region.y, region.width, region.height);
+              
+              ctx.fillStyle = '#000';
+              ctx.font = 'bold 16px Arial';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText('[Texto Traduzido]', 
+                region.x + region.width / 2, 
+                region.y + region.height / 2);
+            });
 
-              totalBubblesDetected += regions.length;
-              totalTextsTranslated += regions.length;
-
-              for (const region of regions) {
-                // Limpar região
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.98)';
-                ctx.fillRect(region.x, region.y, region.width, region.height);
-                
-                // Borda
-                ctx.strokeStyle = '#000000';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(region.x, region.y, region.width, region.height);
-                
-                // Texto
-                ctx.fillStyle = '#000000';
-                ctx.font = 'bold 16px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('[Texto Traduzido]', region.x + region.width / 2, region.y + region.height / 2);
-              }
-
-              resolve(canvas.toDataURL('image/png'));
-            };
-            img.onerror = function() {
-              reject(new Error('Não foi possível carregar a imagem'));
-            };
-            img.src = e.target.result;
-          } catch (err) {
-            reject(err);
-          }
+            resolve(canvas.toDataURL('image/png'));
+          };
+          
+          img.onerror = function() {
+            reject(new Error('Erro ao carregar imagem'));
+          };
+          
+          img.src = e.target.result;
         };
+        
         reader.onerror = function() {
-          reject(new Error('Erro ao ler o arquivo'));
+          reject(new Error('Erro ao ler arquivo'));
         };
+        
         reader.readAsDataURL(file);
       });
     }
 
     function updateProgress(current, total, message) {
-      if (current !== null && total !== null) {
-        const percent = (current / total) * 100;
-        progressFill.style.width = percent + '%';
-      }
+      const percent = (current / total) * 100;
+      progressFill.style.width = percent + '%';
       progressText.textContent = message;
     }
 
-    function showResults() {
+    function showResults(bubbles, texts) {
+      console.log('✅ Mostrando resultados...');
+      
       resultsSection.classList.remove('hidden');
       resultsContainer.innerHTML = '';
       
-      statBubbles.textContent = totalBubblesDetected;
-      statTexts.textContent = totalTextsTranslated;
+      statBubbles.textContent = bubbles;
+      statTexts.textContent = texts;
       statImages.textContent = translatedImages.length;
       
       translatedImages.forEach(function(imgSrc, index) {
         const img = document.createElement('img');
         img.src = imgSrc;
         img.className = 'result-image';
-        img.alt = 'Página ' + (index + 1) + ' traduzida';
         resultsContainer.appendChild(img);
       });
 
@@ -678,28 +518,30 @@
     }
 
     function showError(message) {
-      errorAlert.textContent = message;
+      errorAlert.textContent = '❌ ' + message;
       errorAlert.classList.remove('hidden');
     }
 
-    downloadBtn.addEventListener('click', function() {
+    function hideError() {
+      errorAlert.classList.add('hidden');
+    }
+
+    downloadBtn.onclick = function() {
       translatedImages.forEach(function(imgSrc, index) {
         const a = document.createElement('a');
         a.href = imgSrc;
-        a.download = 'manga-traduzido-pagina-' + (index + 1) + '.png';
+        a.download = 'manga-traduzido-' + (index + 1) + '.png';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
       });
-    });
+    };
 
-    newBtn.addEventListener('click', function() {
+    newBtn.onclick = function() {
       location.reload();
-    });
+    };
 
-    // Console log para debug
-    console.log('%c🌐 Tradutor de Mangá PRO V3.0 ', 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 20px; font-size: 16px; font-weight: bold;');
-    console.log('%c✅ Sistema carregado! Clique na área de upload para testar.', 'color: #10b981; font-size: 14px;');
+    console.log('✅ Sistema pronto! Clique no botão para testar.');
   </script>
 </body>
 </html>
