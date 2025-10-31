@@ -50,7 +50,7 @@
   <div class="container">
     <div class="header">
       <h1>🌐 Tradutor de Mangá PRO</h1>
-      <div class="version">⚡ V4.1 - AGRUPAMENTO MELHORADO</div>
+      <div class="version">⚡ V4.2 - AGRUPAMENTO BALANCEADO</div>
     </div>
 
     <div class="card">
@@ -107,11 +107,11 @@
     </div>
 
     <div class="alert alert-info">
-      <strong>💡 V4.1 - Melhorias:</strong><br>
-      ✅ Distância de agrupamento: 200px (maior alcance)<br>
-      ✅ Agrupa palavras na mesma linha horizontal<br>
-      ✅ Agrupa palavras na mesma coluna vertical<br>
-      ✅ Ignora letras soltas (mín. 3 caracteres + 2 letras)
+      <strong>💡 V4.2 - Agrupamento Balanceado:</strong><br>
+      ✅ Distância: 150px (nem muito, nem pouco)<br>
+      ✅ Agrupa mesma linha (distância Y < 25px)<br>
+      ✅ Limite de tamanho: máx 600x400px (evita grupos gigantes)<br>
+      ✅ Ignora letras soltas (mín. 3 caracteres)
     </div>
     <div id="err" class="alert alert-error hidden"></div>
   </div>
@@ -223,7 +223,7 @@
 
               console.log('Palavras válidas:', words.length);
 
-              const groups = group(words, 200); // DISTÂNCIA MAIOR = 200px
+              const groups = group(words, 150); // DISTÂNCIA BALANCEADA = 150px
               console.log('Balões:', groups.length);
               
               tb += groups.length;
@@ -258,11 +258,11 @@
       const grps = [];
       const used = new Set();
 
-      // Ordenar palavras por posição (cima para baixo, esquerda para direita)
+      // Ordenar palavras por posição
       const sorted = [...words].sort((a, b) => {
         const yDiff = a.bbox.y0 - b.bbox.y0;
-        if (Math.abs(yDiff) > 50) return yDiff; // Diferente linha
-        return a.bbox.x0 - b.bbox.x0; // Mesma linha
+        if (Math.abs(yDiff) > 50) return yDiff;
+        return a.bbox.x0 - b.bbox.x0;
       });
 
       sorted.forEach((w, i) => {
@@ -274,7 +274,7 @@
         };
         used.add(i);
 
-        // Buscar palavras próximas (incluindo direções múltiplas)
+        // Primeira passada: buscar palavras MUITO próximas
         sorted.forEach((o, j) => {
           if (i === j || used.has(j)) return;
           
@@ -282,21 +282,27 @@
           const dy = (w.bbox.y0 + w.bbox.y1)/2 - (o.bbox.y0 + o.bbox.y1)/2;
           const dist = Math.sqrt(dx*dx + dy*dy);
 
-          // Agrupar se: distância curta OU mesma linha vertical
-          const sameLine = Math.abs(dy) < 30; // Mesma linha horizontal
-          const sameColumn = Math.abs(dx) < 30; // Mesma coluna vertical
+          // Só agrupar se REALMENTE próximo
+          const sameLine = Math.abs(dy) < 25 && Math.abs(dx) < maxDist;
+          const veryClose = dist < maxDist * 0.6; // 60% da distância máxima
 
-          if (dist < maxDist || sameLine || sameColumn) {
-            g.words.push(o);
-            g.bbox.x0 = Math.min(g.bbox.x0, o.bbox.x0);
-            g.bbox.y0 = Math.min(g.bbox.y0, o.bbox.y0);
-            g.bbox.x1 = Math.max(g.bbox.x1, o.bbox.x1);
-            g.bbox.y1 = Math.max(g.bbox.y1, o.bbox.y1);
-            used.add(j);
+          if (sameLine || veryClose) {
+            // Verificar se o grupo não está ficando grande demais
+            const newWidth = Math.max(g.bbox.x1, o.bbox.x1) - Math.min(g.bbox.x0, o.bbox.x0);
+            const newHeight = Math.max(g.bbox.y1, o.bbox.y1) - Math.min(g.bbox.y0, o.bbox.y0);
+            
+            // Limitar tamanho do grupo (evitar balões gigantes)
+            if (newWidth < 600 && newHeight < 400) {
+              g.words.push(o);
+              g.bbox.x0 = Math.min(g.bbox.x0, o.bbox.x0);
+              g.bbox.y0 = Math.min(g.bbox.y0, o.bbox.y0);
+              g.bbox.x1 = Math.max(g.bbox.x1, o.bbox.x1);
+              g.bbox.y1 = Math.max(g.bbox.y1, o.bbox.y1);
+              used.add(j);
+            }
           }
         });
 
-        // Só adicionar se tiver palavras válidas
         if (g.words.length > 0) grps.push(g);
       });
 
@@ -408,7 +414,7 @@
 
     newBtn.onclick = () => location.reload();
 
-    console.log('✅ V4.1 - Agrupamento vertical/horizontal + distância 200px!');
+    console.log('✅ V4.2 - Agrupamento balanceado com limite de tamanho!');
   </script>
 </body>
 </html>
