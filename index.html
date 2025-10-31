@@ -50,7 +50,7 @@
   <div class="container">
     <div class="header">
       <h1>🌐 Tradutor de Mangá PRO</h1>
-      <div class="version">⚡ V4.0 - SEM LETRAS SOLTAS</div>
+      <div class="version">⚡ V4.1 - AGRUPAMENTO MELHORADO</div>
     </div>
 
     <div class="card">
@@ -107,10 +107,11 @@
     </div>
 
     <div class="alert alert-info">
-      <strong>💡 V4.0 - Melhorias:</strong><br>
-      ✅ Ignora letras/números soltos (mín. 3 caracteres)<br>
-      ✅ Agrupa balões com distância maior (120px)<br>
-      ✅ Filtra confiança mínima 50%
+      <strong>💡 V4.1 - Melhorias:</strong><br>
+      ✅ Distância de agrupamento: 200px (maior alcance)<br>
+      ✅ Agrupa palavras na mesma linha horizontal<br>
+      ✅ Agrupa palavras na mesma coluna vertical<br>
+      ✅ Ignora letras soltas (mín. 3 caracteres + 2 letras)
     </div>
     <div id="err" class="alert alert-error hidden"></div>
   </div>
@@ -222,7 +223,7 @@
 
               console.log('Palavras válidas:', words.length);
 
-              const groups = group(words, 120); // DISTÂNCIA MAIOR = 120px
+              const groups = group(words, 200); // DISTÂNCIA MAIOR = 200px
               console.log('Balões:', groups.length);
               
               tb += groups.length;
@@ -257,7 +258,14 @@
       const grps = [];
       const used = new Set();
 
-      words.forEach((w, i) => {
+      // Ordenar palavras por posição (cima para baixo, esquerda para direita)
+      const sorted = [...words].sort((a, b) => {
+        const yDiff = a.bbox.y0 - b.bbox.y0;
+        if (Math.abs(yDiff) > 50) return yDiff; // Diferente linha
+        return a.bbox.x0 - b.bbox.x0; // Mesma linha
+      });
+
+      sorted.forEach((w, i) => {
         if (used.has(i)) return;
         
         const g = {
@@ -266,14 +274,19 @@
         };
         used.add(i);
 
-        words.forEach((o, j) => {
+        // Buscar palavras próximas (incluindo direções múltiplas)
+        sorted.forEach((o, j) => {
           if (i === j || used.has(j)) return;
           
           const dx = (w.bbox.x0 + w.bbox.x1)/2 - (o.bbox.x0 + o.bbox.x1)/2;
           const dy = (w.bbox.y0 + w.bbox.y1)/2 - (o.bbox.y0 + o.bbox.y1)/2;
           const dist = Math.sqrt(dx*dx + dy*dy);
 
-          if (dist < maxDist) {
+          // Agrupar se: distância curta OU mesma linha vertical
+          const sameLine = Math.abs(dy) < 30; // Mesma linha horizontal
+          const sameColumn = Math.abs(dx) < 30; // Mesma coluna vertical
+
+          if (dist < maxDist || sameLine || sameColumn) {
             g.words.push(o);
             g.bbox.x0 = Math.min(g.bbox.x0, o.bbox.x0);
             g.bbox.y0 = Math.min(g.bbox.y0, o.bbox.y0);
@@ -283,6 +296,7 @@
           }
         });
 
+        // Só adicionar se tiver palavras válidas
         if (g.words.length > 0) grps.push(g);
       });
 
@@ -394,7 +408,7 @@
 
     newBtn.onclick = () => location.reload();
 
-    console.log('✅ V4.0 - Filtros rigorosos ativados!');
+    console.log('✅ V4.1 - Agrupamento vertical/horizontal + distância 200px!');
   </script>
 </body>
 </html>
