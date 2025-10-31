@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tradutor de Mangá V5.0 - DETECÇÃO DE BALÕES</title>
+  <title>Tradutor de Mangá V5.1 - CLUSTERING INTELIGENTE</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -11,7 +11,7 @@
     .container { max-width: 900px; margin: 0 auto; }
     .header { text-align: center; color: white; margin-bottom: 30px; }
     .header h1 { font-size: 36px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-    .version { background: rgba(255,255,255,0.3); padding: 10px 24px; border-radius: 20px; font-size: 15px; display: inline-block; font-weight: bold; margin-top: 12px; }
+    .version { background: rgba(255,255,255,0.35); padding: 10px 24px; border-radius: 20px; font-size: 15px; display: inline-block; font-weight: bold; margin-top: 12px; }
     .card { background: white; border-radius: 18px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); margin-bottom: 24px; }
     .settings { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px; }
     .setting { padding: 18px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-radius: 12px; border: 2px solid #e5e7eb; }
@@ -41,7 +41,6 @@
     .alert { padding: 18px; border-radius: 12px; margin-top: 18px; font-size: 15px; line-height: 1.6; }
     .alert-error { background: linear-gradient(135deg, #fee2e2, #fecaca); color: #991b1b; border: 2px solid #fca5a5; }
     .alert-info { background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #1e40af; border: 2px solid #93c5fd; }
-    .alert-success { background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #065f46; border: 2px solid #6ee7b7; }
     .hidden { display: none; }
     .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
     .stat { text-align: center; padding: 20px; background: linear-gradient(135deg, #f9fafb, #f3f4f6); border-radius: 12px; border: 2px solid #e5e7eb; }
@@ -53,7 +52,7 @@
   <div class="container">
     <div class="header">
       <h1>🌐 Tradutor de Mangá PRO</h1>
-      <div class="version">🚀 V5.0 - DETECÇÃO DE BALÕES</div>
+      <div class="version">🧠 V5.1 - CLUSTERING INTELIGENTE</div>
     </div>
 
     <div class="card">
@@ -79,14 +78,14 @@
       <button class="upload-btn" id="upload">
         <span class="icon">📤</span>
         <div>CLIQUE PARA ESCOLHER IMAGENS</div>
-        <div style="font-size: 16px; margin-top: 12px; opacity: 0.9;">Máximo 2 imagens por vez</div>
+        <div style="font-size: 16px; margin-top: 12px; opacity: 0.9;">Máximo 2 imagens</div>
       </button>
       <input type="file" id="file" accept="image/*" multiple>
       
       <div id="prev" class="hidden">
-        <h3 style="margin-top: 24px; font-size: 18px;">📸 Imagens Selecionadas:</h3>
+        <h3 style="margin-top: 24px; font-size: 18px;">📸 Imagens:</h3>
         <div id="grid" class="preview"></div>
-        <button class="btn btn-primary" id="go">🚀 TRADUZIR COM DETECÇÃO DE BALÕES</button>
+        <button class="btn btn-primary" id="go">🚀 TRADUZIR (Agrupamento Agressivo)</button>
       </div>
 
       <div id="prog" class="hidden progress">
@@ -98,25 +97,23 @@
     <div id="results" class="card hidden">
       <h3 style="text-align: center; color: #10b981; margin-bottom: 24px; font-size: 22px;">✅ Tradução Concluída!</h3>
       <div class="stats">
-        <div class="stat"><div class="stat-num" id="sb">0</div><div class="stat-label">Balões Detectados</div></div>
-        <div class="stat"><div class="stat-num" id="st">0</div><div class="stat-label">Textos Traduzidos</div></div>
+        <div class="stat"><div class="stat-num" id="sb">0</div><div class="stat-label">Balões</div></div>
+        <div class="stat"><div class="stat-num" id="st">0</div><div class="stat-label">Traduções</div></div>
         <div class="stat"><div class="stat-num" id="si">0</div><div class="stat-label">Imagens</div></div>
       </div>
       <div id="out"></div>
       <div class="btn-group">
-        <button class="btn btn-success" id="dl">💾 Baixar Todas</button>
-        <button class="btn btn-secondary" id="new">🔄 Nova Tradução</button>
+        <button class="btn btn-success" id="dl">💾 Baixar</button>
+        <button class="btn btn-secondary" id="new">🔄 Nova</button>
       </div>
     </div>
 
     <div class="alert alert-info">
-      <strong>💡 NOVA ABORDAGEM V5.0:</strong><br>
-      🎯 <strong>Detecta balões completos</strong> primeiro (áreas brancas grandes)<br>
-      📝 <strong>Extrai TODO o texto</strong> dentro de cada balão<br>
-      🌐 <strong>Traduz o texto completo</strong> de uma vez<br>
-      📦 <strong>Desenha UMA caixa</strong> por balão com a tradução<br>
-      <br>
-      ⚡ Resultado: Textos contínuos, não mais fragmentados!
+      <strong>💡 V5.1 - Clustering Hierárquico:</strong><br>
+      🧠 <strong>Algoritmo inteligente</strong> agrupa palavras por proximidade<br>
+      📊 <strong>Múltiplas passadas</strong> para garantir agrupamento completo<br>
+      🎯 <strong>Limite de grupos</strong>: máximo 5 balões por imagem<br>
+      📦 <strong>Caixas grandes</strong> com texto completo
     </div>
     <div id="err" class="alert alert-error hidden"></div>
   </div>
@@ -150,8 +147,8 @@
 
     file.onchange = e => {
       const f = Array.from(e.target.files);
-      if (f.length === 0) return showErr('Nenhum arquivo selecionado!');
-      if (f.length > 2) return showErr('Máximo 2 imagens por vez!');
+      if (f.length === 0) return showErr('Nenhum arquivo!');
+      if (f.length > 2) return showErr('Máximo 2 imagens!');
       files = f;
       showPreview();
       hideErr();
@@ -187,8 +184,8 @@
 
       try {
         for (let i = 0; i < files.length; i++) {
-          upd(i, files.length, '🔍 Processando imagem ' + (i + 1) + '/' + files.length + '...');
-          const r = await procBalloon(files[i], i + 1);
+          upd(i, files.length, '🔍 Processando ' + (i + 1) + '/' + files.length);
+          const r = await procCluster(files[i], i + 1);
           imgs.push(r);
         }
         upd(files.length, files.length, '✅ Concluído!');
@@ -201,7 +198,7 @@
       }
     };
 
-    async function procBalloon(f, n) {
+    async function procCluster(f, n) {
       return new Promise((res, rej) => {
         const r = new FileReader();
         r.onload = async e => {
@@ -213,47 +210,46 @@
             c.height = img.height;
             ctx.drawImage(img, 0, 0);
 
-            upd(null, null, '🎯 Detectando balões na imagem ' + n + '...');
-
-            // ETAPA 1: Detectar regiões de balões (áreas brancas)
-            const balloons = detectBalloons(ctx, c.width, c.height);
-            console.log('Balões detectados:', balloons.length);
-            tb += balloons.length;
-
-            upd(null, null, '📝 Extraindo texto com OCR...');
+            upd(null, null, '📝 OCR na imagem ' + n + '...');
 
             try {
-              // ETAPA 2: OCR na imagem completa
               const ocr = await Tesseract.recognize(c, from.value, {
                 logger: m => m.status === 'recognizing text' && upd(null, null, 'OCR: ' + Math.round(m.progress * 100) + '%')
               });
 
-              const words = ocr.data.words.filter(w => w.confidence > 45 && w.text.trim().length >= 3);
+              const words = ocr.data.words.filter(w => 
+                w.confidence > 45 && 
+                w.text.trim().length >= 3 &&
+                /[a-zA-ZÀ-ÿ]{2,}/.test(w.text)
+              );
 
-              // ETAPA 3: Para cada balão, pegar palavras dentro dele
-              for (let i = 0; i < balloons.length; i++) {
-                const balloon = balloons[i];
-                upd(null, null, '🌐 Traduzindo balão ' + (i + 1) + '/' + balloons.length + '...');
+              console.log('Palavras válidas:', words.length);
 
-                // Palavras dentro deste balão
-                const wordsInBalloon = words.filter(w => isInside(w.bbox, balloon));
-                
-                if (wordsInBalloon.length > 0) {
-                  // Ordenar palavras por posição
-                  wordsInBalloon.sort((a, b) => {
-                    if (Math.abs(a.bbox.y0 - b.bbox.y0) > 20) return a.bbox.y0 - b.bbox.y0;
-                    return a.bbox.x0 - b.bbox.x0;
-                  });
+              upd(null, null, '🧠 Agrupando palavras...');
 
-                  const fullText = wordsInBalloon.map(w => w.text).join(' ');
-                  console.log('Texto do balão:', fullText);
+              // CLUSTERING HIERÁRQUICO AGRESSIVO
+              const clusters = hierarchicalCluster(words, 250); // Distância MUITO grande
+              console.log('Clusters finais:', clusters.length);
 
-                  const translation = await translate(fullText);
-                  tt++;
+              tb += clusters.length;
 
-                  // Desenhar UMA caixa para TODO o balão
-                  drawBalloonText(ctx, balloon, translation);
-                }
+              for (let i = 0; i < clusters.length; i++) {
+                const cluster = clusters[i];
+                upd(null, null, '🌐 Traduzindo balão ' + (i + 1) + '/' + clusters.length + '...');
+
+                // Ordenar palavras do cluster
+                cluster.words.sort((a, b) => {
+                  if (Math.abs(a.bbox.y0 - b.bbox.y0) > 20) return a.bbox.y0 - b.bbox.y0;
+                  return a.bbox.x0 - b.bbox.x0;
+                });
+
+                const txt = cluster.words.map(w => w.text).join(' ');
+                console.log('Texto:', txt);
+
+                const trans = await translate(txt);
+                tt++;
+
+                drawBox(ctx, cluster.bbox, trans);
               }
 
               res(c.toDataURL('image/png', 0.95));
@@ -262,151 +258,102 @@
               rej(new Error('Falha no OCR'));
             }
           };
-          img.onerror = () => rej(new Error('Erro ao carregar imagem'));
+          img.onerror = () => rej(new Error('Erro carregar'));
           img.src = e.target.result;
         };
-        r.onerror = () => rej(new Error('Erro ao ler arquivo'));
+        r.onerror = () => rej(new Error('Erro ler'));
         r.readAsDataURL(f);
       });
     }
 
-    function detectBalloons(ctx, w, h) {
-      const imgData = ctx.getImageData(0, 0, w, h);
-      const data = imgData.data;
-      const balloons = [];
-      const threshold = 200;
-      const minSize = 2000; // Área mínima
-      const maxSize = w * h * 0.3; // NOVO: Máximo 30% da imagem (evita página inteira)
+    function hierarchicalCluster(words, maxDist) {
+      if (words.length === 0) return [];
 
-      // Criar mapa binário
-      const binary = new Uint8Array(w * h);
-      for (let i = 0; i < data.length; i += 4) {
-        const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
-        binary[i / 4] = brightness > threshold ? 1 : 0;
-      }
+      // Criar clusters iniciais (cada palavra = 1 cluster)
+      let clusters = words.map(w => ({
+        words: [w],
+        bbox: { x0: w.bbox.x0, y0: w.bbox.y0, x1: w.bbox.x1, y1: w.bbox.y1 }
+      }));
 
-      // Detectar regiões retangulares brancas
-      const step = 35;
-      const minW = 100;
-      const minH = 80;
-      const maxW = w * 0.6; // NOVO: Largura máxima 60% da imagem
-      const maxH = h * 0.4; // NOVO: Altura máxima 40% da imagem
+      // Múltiplas passadas de merge
+      let changed = true;
+      let passCount = 0;
+      const maxPasses = 10;
 
-      for (let y = 0; y < h - minH; y += step) {
-        for (let x = 0; x < w - minW; x += step) {
-          // Verificar se região inicial é branca
-          let whites = 0;
-          let total = 0;
+      while (changed && passCount < maxPasses) {
+        changed = false;
+        passCount++;
 
-          for (let dy = 0; dy < 80; dy += 4) {
-            for (let dx = 0; dx < 80; dx += 4) {
-              if (y + dy < h && x + dx < w) {
-                if (binary[(y + dy) * w + (x + dx)] === 1) whites++;
-                total++;
-              }
+        for (let i = 0; i < clusters.length; i++) {
+          for (let j = i + 1; j < clusters.length; j++) {
+            const c1 = clusters[i];
+            const c2 = clusters[j];
+
+            // Calcular distância entre centros
+            const cx1 = (c1.bbox.x0 + c1.bbox.x1) / 2;
+            const cy1 = (c1.bbox.y0 + c1.bbox.y1) / 2;
+            const cx2 = (c2.bbox.x0 + c2.bbox.x1) / 2;
+            const cy2 = (c2.bbox.y0 + c2.bbox.y1) / 2;
+
+            const dist = Math.sqrt((cx1 - cx2) ** 2 + (cy1 - cy2) ** 2);
+
+            // Merge se próximos OU mesma linha/coluna
+            const sameLine = Math.abs(cy1 - cy2) < 40;
+            const sameCol = Math.abs(cx1 - cx2) < 40;
+
+            if (dist < maxDist || sameLine || sameCol) {
+              // Merge clusters
+              c1.words.push(...c2.words);
+              c1.bbox.x0 = Math.min(c1.bbox.x0, c2.bbox.x0);
+              c1.bbox.y0 = Math.min(c1.bbox.y0, c2.bbox.y0);
+              c1.bbox.x1 = Math.max(c1.bbox.x1, c2.bbox.x1);
+              c1.bbox.y1 = Math.max(c1.bbox.y1, c2.bbox.y1);
+
+              clusters.splice(j, 1);
+              changed = true;
+              break;
             }
           }
-
-          if (whites / total > 0.75) {
-            // Expandir região
-            let width = 80;
-            let height = 80;
-
-            // Expandir horizontalmente (com limite)
-            while (x + width < w - 10 && width < maxW) {
-              let edge = 0;
-              let edgeTotal = 0;
-              for (let dy = 0; dy < height; dy += 4) {
-                if (y + dy < h) {
-                  if (binary[(y + dy) * w + (x + width)] === 1) edge++;
-                  edgeTotal++;
-                }
-              }
-              if (edge / edgeTotal < 0.65) break;
-              width += 8;
-            }
-
-            // Expandir verticalmente (com limite)
-            while (y + height < h - 10 && height < maxH) {
-              let edge = 0;
-              let edgeTotal = 0;
-              for (let dx = 0; dx < width; dx += 4) {
-                if (x + dx < w) {
-                  if (binary[(y + height) * w + (x + dx)] === 1) edge++;
-                  edgeTotal++;
-                }
-              }
-              if (edge / edgeTotal < 0.65) break;
-              height += 8;
-            }
-
-            const area = width * height;
-            
-            // NOVO: Verificar se não é muito grande nem muito pequeno
-            if (area > minSize && area < maxSize && width < maxW && height < maxH) {
-              // Verificar sobreposição
-              const overlap = balloons.some(b => {
-                const overlapX = Math.max(0, Math.min(x + width, b.x + b.w) - Math.max(x, b.x));
-                const overlapY = Math.max(0, Math.min(y + height, b.y + b.h) - Math.max(y, b.y));
-                const overlapArea = overlapX * overlapY;
-                return overlapArea > area * 0.3; // Mais de 30% de sobreposição
-              });
-              
-              if (!overlap) {
-                balloons.push({ x, y, w: width, h: height });
-              }
-            }
-          }
+          if (changed) break;
         }
       }
 
-      // NOVO: Filtrar balões que estão nas bordas da imagem (provavelmente não são balões)
-      return balloons.filter(b => {
-        const notOnEdge = b.x > 20 && b.y > 20 && 
-                         b.x + b.w < w - 20 && b.y + b.h < h - 20;
-        const reasonableSize = b.w < w * 0.5 && b.h < h * 0.4;
-        return notOnEdge && reasonableSize;
-      });
+      // Limitar a 5 balões maiores
+      if (clusters.length > 5) {
+        clusters.sort((a, b) => b.words.length - a.words.length);
+        clusters = clusters.slice(0, 5);
+      }
+
+      return clusters;
     }
 
-    function isInside(bbox, balloon) {
-      const cx = (bbox.x0 + bbox.x1) / 2;
-      const cy = (bbox.y0 + bbox.y1) / 2;
-      return cx >= balloon.x && cx <= balloon.x + balloon.w &&
-             cy >= balloon.y && cy <= balloon.y + balloon.h;
-    }
+    function drawBox(ctx, bbox, txt) {
+      const pad = 15;
+      const x = bbox.x0 - pad;
+      const y = bbox.y0 - pad;
+      const w = bbox.x1 - bbox.x0 + pad * 2;
+      const h = bbox.y1 - bbox.y0 + pad * 2;
 
-    function drawBalloonText(ctx, balloon, txt) {
-      const pad = 12;
-      const x = balloon.x + pad;
-      const y = balloon.y + pad;
-      const w = balloon.w - pad * 2;
-      const h = balloon.h - pad * 2;
-
-      // Fundo branco opaco
       ctx.fillStyle = 'rgba(255, 255, 255, 0.98)';
-      ctx.fillRect(balloon.x, balloon.y, balloon.w, balloon.h);
+      ctx.fillRect(x, y, w, h);
 
-      // Borda
       ctx.strokeStyle = '#000';
       ctx.lineWidth = 2.5;
-      ctx.strokeRect(balloon.x, balloon.y, balloon.w, balloon.h);
+      ctx.strokeRect(x, y, w, h);
 
-      // Texto
       ctx.fillStyle = '#000';
-      const fs = Math.max(Math.min(h * 0.25, 20), 13);
-      ctx.font = 'bold ' + fs + 'px Arial, sans-serif';
+      const fs = Math.max(Math.min(h * 0.3, 20), 13);
+      ctx.font = 'bold ' + fs + 'px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
-      // Quebrar em linhas
       const words = txt.split(' ');
       const lines = [];
       let line = '';
 
       words.forEach(word => {
         const test = line + (line ? ' ' : '') + word;
-        if (ctx.measureText(test).width > w - 24 && line) {
+        if (ctx.measureText(test).width > w - 30 && line) {
           lines.push(line);
           line = word;
         } else {
@@ -416,10 +363,10 @@
       if (line) lines.push(line);
 
       const lh = fs * 1.3;
-      const sy = balloon.y + balloon.h / 2 - (lines.length * lh) / 2 + fs / 2;
+      const sy = y + h / 2 - (lines.length * lh) / 2 + fs / 2;
 
       lines.forEach((l, i) => {
-        ctx.fillText(l, balloon.x + balloon.w / 2, sy + i * lh);
+        ctx.fillText(l, x + w / 2, sy + i * lh);
       });
     }
 
@@ -435,9 +382,7 @@
         if (data.responseStatus === 200 && data.responseData.translatedText) {
           return data.responseData.translatedText;
         }
-      } catch (e) {
-        console.warn('Tradução falhou:', e);
-      }
+      } catch (e) {}
 
       return txt;
     }
@@ -482,7 +427,7 @@
       imgs.forEach((src, i) => {
         const a = document.createElement('a');
         a.href = src;
-        a.download = 'manga-traduzido-' + (i + 1) + '.png';
+        a.download = 'manga-' + (i + 1) + '.png';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -491,8 +436,7 @@
 
     newBtn.onclick = () => location.reload();
 
-    console.log('🚀 V5.0 - Sistema de Detecção de Balões ativado!');
-    console.log('📋 Fluxo: Detecta Balões → OCR → Agrupa Texto por Balão → Traduz → Desenha');
+    console.log('🧠 V5.1 - Clustering hierárquico ativado!');
   </script>
 </body>
 </html>
