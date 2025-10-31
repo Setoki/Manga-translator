@@ -275,9 +275,10 @@
       const data = imgData.data;
       const balloons = [];
       const threshold = 200;
-      const minSize = 2000; // Área mínima do balão
+      const minSize = 2000; // Área mínima
+      const maxSize = w * h * 0.3; // NOVO: Máximo 30% da imagem (evita página inteira)
 
-      // Criar mapa binário (branco/preto)
+      // Criar mapa binário
       const binary = new Uint8Array(w * h);
       for (let i = 0; i < data.length; i += 4) {
         const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
@@ -285,18 +286,20 @@
       }
 
       // Detectar regiões retangulares brancas
-      const step = 40;
-      const minW = 80;
-      const minH = 60;
+      const step = 35;
+      const minW = 100;
+      const minH = 80;
+      const maxW = w * 0.6; // NOVO: Largura máxima 60% da imagem
+      const maxH = h * 0.4; // NOVO: Altura máxima 40% da imagem
 
       for (let y = 0; y < h - minH; y += step) {
         for (let x = 0; x < w - minW; x += step) {
-          // Verificar se região é majoritariamente branca
+          // Verificar se região inicial é branca
           let whites = 0;
           let total = 0;
 
-          for (let dy = 0; dy < 100; dy += 5) {
-            for (let dx = 0; dx < 100; dx += 5) {
+          for (let dy = 0; dy < 80; dy += 4) {
+            for (let dx = 0; dx < 80; dx += 4) {
               if (y + dy < h && x + dx < w) {
                 if (binary[(y + dy) * w + (x + dx)] === 1) whites++;
                 total++;
@@ -304,45 +307,50 @@
             }
           }
 
-          if (whites / total > 0.7) {
+          if (whites / total > 0.75) {
             // Expandir região
-            let width = 100;
-            let height = 100;
+            let width = 80;
+            let height = 80;
 
-            // Expandir horizontalmente
-            while (x + width < w - 10) {
+            // Expandir horizontalmente (com limite)
+            while (x + width < w - 10 && width < maxW) {
               let edge = 0;
               let edgeTotal = 0;
-              for (let dy = 0; dy < height; dy += 5) {
+              for (let dy = 0; dy < height; dy += 4) {
                 if (y + dy < h) {
                   if (binary[(y + dy) * w + (x + width)] === 1) edge++;
                   edgeTotal++;
                 }
               }
-              if (edge / edgeTotal < 0.6) break;
-              width += 10;
+              if (edge / edgeTotal < 0.65) break;
+              width += 8;
             }
 
-            // Expandir verticalmente
-            while (y + height < h - 10) {
+            // Expandir verticalmente (com limite)
+            while (y + height < h - 10 && height < maxH) {
               let edge = 0;
               let edgeTotal = 0;
-              for (let dx = 0; dx < width; dx += 5) {
+              for (let dx = 0; dx < width; dx += 4) {
                 if (x + dx < w) {
                   if (binary[(y + height) * w + (x + dx)] === 1) edge++;
                   edgeTotal++;
                 }
               }
-              if (edge / edgeTotal < 0.6) break;
-              height += 10;
+              if (edge / edgeTotal < 0.65) break;
+              height += 8;
             }
 
             const area = width * height;
-            if (area > minSize) {
-              // Verificar se não sobrepõe muito com balões existentes
-              const overlap = balloons.some(b => 
-                !(x > b.x + b.w || x + width < b.x || y > b.y + b.h || y + height < b.y)
-              );
+            
+            // NOVO: Verificar se não é muito grande nem muito pequeno
+            if (area > minSize && area < maxSize && width < maxW && height < maxH) {
+              // Verificar sobreposição
+              const overlap = balloons.some(b => {
+                const overlapX = Math.max(0, Math.min(x + width, b.x + b.w) - Math.max(x, b.x));
+                const overlapY = Math.max(0, Math.min(y + height, b.y + b.h) - Math.max(y, b.y));
+                const overlapArea = overlapX * overlapY;
+                return overlapArea > area * 0.3; // Mais de 30% de sobreposição
+              });
               
               if (!overlap) {
                 balloons.push({ x, y, w: width, h: height });
@@ -352,7 +360,13 @@
         }
       }
 
-      return balloons;
+      // NOVO: Filtrar balões que estão nas bordas da imagem (provavelmente não são balões)
+      return balloons.filter(b => {
+        const notOnEdge = b.x > 20 && b.y > 20 && 
+                         b.x + b.w < w - 20 && b.y + b.h < h - 20;
+        const reasonableSize = b.w < w * 0.5 && b.h < h * 0.4;
+        return notOnEdge && reasonableSize;
+      });
     }
 
     function isInside(bbox, balloon) {
